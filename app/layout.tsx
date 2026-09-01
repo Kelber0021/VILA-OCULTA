@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import "./globals.css";
@@ -6,6 +6,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "Cidade Dorme", template: "%s — Cidade Dorme" },
   description: "Uma prévia interativa de um jogo brasileiro de dedução social.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#070a15",
+  colorScheme: "dark",
 };
 
 const navigation = [

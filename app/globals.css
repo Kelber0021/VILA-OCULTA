@@ -162,11 +162,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (max-width: 31rem) {
-  .site-header { align-items: flex-start; }
-  .site-header nav { gap: .35rem; }
-  .site-header nav a { font-size: .68rem; padding-inline: .25rem; }
+  .site-header { flex-wrap: wrap; row-gap: .6rem; align-items: flex-start; }
+  .site-header nav { width: 100%; gap: 1rem; }
+  .site-header nav a { font-size: .78rem; padding-inline: 0; }
   .moon-mark { display: none; }
-  .wordmark { max-width: 5.5rem; white-space: normal; line-height: .82; }
+  .wordmark { max-width: none; white-space: nowrap; }
   .hero { padding-top: 7.5rem; }
   .hero h1 { font-size: clamp(3.4rem, 19vw, 5rem); }
   .button-row .button { width: 100%; }
