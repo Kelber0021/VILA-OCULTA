@@ -45,6 +45,15 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - A apresentação visual deve reduzir pistas observáveis sobre quem está apenas aguardando e quem está executando uma ação secreta.
 - A animação deve existir e funcionar tanto em celular quanto em desktop, adaptando enquadramento, controles e densidade ao viewport.
 
+### Xerife
+
+- O **Xerife trabalha sozinho** durante sua ação investigativa; não existe canal privado de aliados, chat secreto ou grupo especial para ele.
+- A investigação é uma informação privada do próprio Xerife.
+- Quando a fase de discussão começa, o chat escrito e a voz geral dos jogadores vivos ficam disponíveis conforme as regras normais da discussão.
+- O Xerife pode usar o que descobriu para acusar, sugerir suspeitos, blefar ou tentar convencer os demais — funcionando socialmente como uma espécie de “X9”.
+- O sistema **não confirma publicamente** que o Xerife está dizendo a verdade, não identifica automaticamente o Xerife para os outros jogadores e não publica sua investigação.
+- A força exata da informação recebida na investigação ainda será definida separadamente.
+
 ### Voz de jogadores eliminados
 
 - Ao ser eliminado, o jogador **deixa imediatamente o canal de voz dos jogadores vivos**.
