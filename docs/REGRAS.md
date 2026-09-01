@@ -4,32 +4,44 @@ Status: **parcialmente definidas**. Este documento separa regras já encontradas
 
 ## 1. Estrutura geral
 
-Vila Oculta é um jogo social de dedução por equipes/facções, com informação secreta, discussão, ações noturnas, votação e eliminação.
+Vila Oculta é um jogo social de dedução por lados/facções, com informação secreta, discussão, ações noturnas, votação e eliminação.
 
 A nova versão será jogada remotamente pela internet. Voz e chat escrito ocorrerão dentro do próprio jogo.
 
-## 2. Facções conhecidas
+## 2. Personagens aprovados para a V1
 
-### Moradores
+A primeira versão terá exatamente quatro personagens:
 
-- São a maioria da vila.
-- Vencem quando todos os Ocultos forem eliminados.
-- Podem incluir personagens sem poder e personagens com habilidades especiais.
+- **Cidadão** — personagem básico do lado da vila, sem ação noturna especial aprovada;
+- **Assassino** — ameaça escondida, com ação noturna de eliminação/alvo;
+- **Xerife** — personagem investigativo do lado da vila;
+- **Anjo** — personagem protetor do lado da vila.
 
-### Ocultos
+Os nomes provisórios do legado (`Morador`, `Oculto`, `Vigia` e `Guardião`) deixam de ser os nomes oficiais da V1.
 
-- São a ameaça escondida.
-- Conhecem seus aliados, conforme a regra do personagem/composição.
-- Durante a noite participam de uma escolha secreta de alvo.
-- Vencem quando atingem uma situação em que os Moradores não conseguem mais superá-los, regra exata a ser formalizada no motor.
+A aprovação dos personagens não define automaticamente todos os detalhes de habilidade. Regras como auto-proteção do Anjo, repetição de alvo e informação exata recebida pelo Xerife serão decididas separadamente.
 
-### Independentes
+## 3. Lados mecânicos
 
-- Têm condições próprias de vitória.
-- A recomendação do legado é adicioná-los somente depois que o modo principal estiver equilibrado.
-- Ainda não estão aprovados para a primeira versão.
+Sem fixar ainda o nome final das facções, a V1 possui dois lados mecânicos:
 
-## 3. Ciclo conceitual de rodada
+### Lado da vila
+
+- Cidadão;
+- Xerife;
+- Anjo.
+
+Esse lado vence quando a ameaça definida pelos Assassinos for eliminada conforme a condição final do motor.
+
+### Lado dos Assassinos
+
+- Assassino.
+
+Esse lado vence quando atingir a condição de domínio/inevitabilidade definida e testada no motor. A fórmula matemática exata ainda precisa ser aprovada.
+
+Não há personagem independente aprovado para a V1.
+
+## 4. Ciclo conceitual de rodada
 
 O legado documenta o ciclo principal:
 
@@ -41,7 +53,7 @@ O legado documenta o ciclo principal:
 
 A reconstrução adicionará estados técnicos explícitos para preparação, distribuição/revelação de personagens, ações noturnas, resolução, eliminação, verificação de vitória, resultado e encerramento.
 
-## 4. Noite
+## 5. Noite
 
 Regras já documentadas:
 
@@ -53,7 +65,14 @@ Regras já documentadas:
 - a interface não deve entregar personagens por sons/animações exclusivos observáveis por terceiros;
 - o servidor deve validar fase, personagem, alvo e permissão antes de aceitar ação.
 
-## 5. Amanhecer
+Na V1:
+
+- o **Cidadão** não possui ação noturna especial aprovada;
+- o **Assassino** participa da ação noturna contra um alvo válido;
+- o **Xerife** realiza uma investigação noturna, cujo resultado exato ainda será definido;
+- o **Anjo** realiza uma proteção noturna, cujas restrições de auto-alvo e repetição ainda serão definidas.
+
+## 6. Amanhecer
 
 O sistema anuncia somente informação pública permitida pela regra:
 
@@ -64,7 +83,7 @@ O sistema anuncia somente informação pública permitida pela regra:
 
 A causa exata não deve ser revelada quando isso destruir a dedução.
 
-## 6. Discussão
+## 7. Discussão
 
 Na versão atual, a discussão será remota e ocorrerá por voz integrada no Vila Oculta.
 
@@ -72,7 +91,7 @@ A arquitetura deve permitir que as permissões de voz variem por fase.
 
 A regra definitiva sobre fala de jogadores eliminados continua pendente.
 
-## 7. Votação
+## 8. Votação
 
 Regras já documentadas:
 
@@ -85,7 +104,7 @@ Regras já documentadas:
 - o servidor deve impedir duplicação e manipulação;
 - a configuração pode permitir ou não alteração do voto antes da confirmação final.
 
-## 8. Empate
+## 9. Empate
 
 O legado prevê alternativas configuráveis:
 
@@ -95,7 +114,7 @@ O legado prevê alternativas configuráveis:
 
 A opção padrão da primeira versão ainda precisa ser definida.
 
-## 9. Julgamento e eliminação
+## 10. Julgamento e eliminação
 
 Regras conhecidas:
 
@@ -109,17 +128,17 @@ Regras conhecidas:
 
 A regra de voz dos eliminados permanece pendente.
 
-## 10. Vitória
+## 11. Vitória
 
-Regras conceituais documentadas:
+Regras conceituais:
 
-- Moradores vencem quando não restam Ocultos;
-- Ocultos vencem quando atingem uma condição de domínio numérico/inevitabilidade definida pelo motor;
-- Independentes, se existirem, vencem conforme objetivo próprio.
+- o lado da vila vence quando não restar a ameaça dos Assassinos;
+- o lado dos Assassinos vence quando atingir uma condição de domínio numérico/inevitabilidade definida pelo motor;
+- não há independente aprovado para a V1.
 
-A condição exata dos Ocultos deverá ser implementada de forma testável depois da composição inicial ser aprovada.
+A condição matemática exata dos Assassinos deverá ser implementada de forma testável depois da composição padrão por quantidade de jogadores ser aprovada.
 
-## 11. Anfitrião
+## 12. Anfitrião
 
 - cria/configura a sala;
 - pode iniciar a partida quando a composição for válida;
@@ -130,7 +149,7 @@ A condição exata dos Ocultos deverá ser implementada de forma testável depoi
 - **não pode enxergar personagens secretos apenas por ser anfitrião**;
 - privilégios de anfitrião são validados no servidor, nunca por URL/localStorage/estado React.
 
-## 12. Configurações previstas
+## 13. Configurações previstas
 
 O legado já previa:
 
@@ -144,7 +163,7 @@ O legado já previa:
 
 A nova versão pode manter essas opções, após validação de UX e balanceamento.
 
-## 13. Comunicação
+## 14. Comunicação
 
 ### Voz
 
@@ -166,7 +185,7 @@ A nova versão pode manter essas opções, após validação de UX e balanceamen
 
 Ainda precisa ser decidido se o chat ficará ativo durante todas as fases ou terá restrições na noite.
 
-## 14. Segurança das regras
+## 15. Segurança das regras
 
 Nenhuma regra crítica pode depender apenas de:
 
@@ -188,12 +207,14 @@ O servidor será a fonte confiável de:
 - vitória;
 - autorização para falar.
 
-## 15. Pontos ainda pendentes
+## 16. Pontos ainda pendentes
 
-- personagens exatos da primeira versão;
+- resposta exata da investigação do Xerife;
+- auto-proteção/repetição do Anjo;
+- composição padrão por quantidade de jogadores;
+- condição matemática exata de vitória dos Assassinos;
 - regra padrão de empate;
 - voz de eliminados;
 - chat durante a noite;
 - espectadores;
-- composição padrão por quantidade de jogadores;
 - limites definitivos de jogadores para a primeira versão.
