@@ -45,18 +45,29 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - A apresentação visual deve reduzir pistas observáveis sobre quem está apenas aguardando e quem está executando uma ação secreta.
 - A animação deve existir e funcionar tanto em celular quanto em desktop, adaptando enquadramento, controles e densidade ao viewport.
 
-### Tasks investigativas durante a partida
+### Tasks durante a partida: escolhas de ação e caminho
 
 - As tasks fazem parte da **partida em andamento**, não são missões de progresso de conta.
-- Durante a fase de discussão/investigação, o jogo pode fazer perguntas curtas para ajudar o jogador a organizar sua suspeita antes de acusar alguém.
-- Exemplos aprovados de perguntas: **“Quem chamou sua atenção?”**, **“Por que ele é suspeito?”**, **“O que aconteceu?”** e **“Qual indício sustenta sua acusação?”**.
-- As respostas formam um **caderno de investigação/suspeitas** privado do jogador, relacionando indícios a jogadores específicos.
-- Antes de formalizar uma acusação, a interface deve pedir ao jogador que selecione ou registre pelo menos um motivo/indício para aquela acusação.
-- O sistema não deve tratar opinião do jogador como verdade objetiva. O que ele registra são **indícios, observações e argumentos**, não confirmação automática de culpa.
-- Evidências objetivas produzidas pelo próprio motor, quando uma regra permitir que aquele jogador as conheça, podem ser registradas separadamente de opiniões sociais.
-- A mecânica deve ser rápida e intuitiva, com perguntas curtas, opções tocáveis/clicáveis e campo opcional para observação livre; não deve transformar a discussão em formulário burocrático.
-- No mobile, o caderno deve abrir como painel/drawer/card sem esconder permanentemente voz, timer ou ação principal. No desktop, pode coexistir lateralmente com a discussão quando houver espaço.
-- Essas tasks não podem revelar publicamente personagem, investigação secreta ou informação privada sem uma ação explícita do jogador e sem respeito às regras da partida.
+- A task principal é uma **decisão contextual do jogador naquela rodada**, não apenas uma pergunta ou checklist.
+- Durante a noite, o jogo pode apresentar opções como ficar em casa, ir até um local, observar uma área, verificar um acontecimento ou executar uma ação permitida pelo personagem.
+- O jogador escolhe o que deseja fazer e essa decisão passa a compor o **caminho/rota daquela pessoa na rodada**.
+- O servidor registra e valida a escolha; o jogador não pode posteriormente inventar outra rota pelo cliente.
+- Essas escolhas podem alimentar encontros, pistas, álibis, contradições e o mini-enredo da sessão, sempre respeitando informação secreta e autorização.
+- A noite deve ser jogável também para personagens sem poder especial quando a rodada oferecer escolhas comuns; isso não concede a eles o poder de outro personagem.
+- O **Xerife escolhe um suspeito para acompanhar durante a noite** e trabalha sozinho nessa ação.
+- O resultado exato que o Xerife obtém ao acompanhar continua limitado às regras aprovadas; não presumir visão de rota, local ou ação exata do alvo sem nova decisão.
+- O modelo anteriormente aprovado de resposta binária `É Assassino / Não é Assassino` continua válido até que uma nova decisão o altere; o ato de “acompanhar” pode ser a apresentação/execução dessa investigação.
+
+### Caderno de investigação e acusação
+
+- O caderno é separado das tasks de ação: **task = o que o jogador fez; caderno = o que ele percebeu/suspeitou**.
+- Durante a fase de discussão, o jogo pode fazer perguntas curtas para ajudar o jogador a organizar sua suspeita antes de acusar alguém.
+- Exemplos aprovados: **“Quem chamou sua atenção?”**, **“Por que ele é suspeito?”**, **“O que aconteceu?”** e **“Qual indício sustenta sua acusação?”**.
+- As respostas formam um caderno privado, relacionando indícios a jogadores específicos.
+- Antes de formalizar uma acusação, a interface deve pedir ao jogador que selecione ou registre pelo menos um motivo/indício.
+- O sistema não transforma opinião em verdade objetiva; preserva blefe, mentira, erro e manipulação social.
+- Evidências objetivas produzidas pelo motor, quando autorizadas, ficam diferenciadas de observações sociais.
+- A mecânica deve ser rápida e intuitiva, nunca um formulário burocrático.
 
 ### Mini-enredos dinâmicos
 
@@ -65,18 +76,21 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - A narrativa pode reagir a acontecimentos públicos reais da sessão, como amanhecer sem eliminação, eliminação noturna, julgamento, diminuição do número de jogadores e outros eventos já autorizados pelo motor.
 - A mesma partida deve manter uma pequena continuidade narrativa, usando elementos recorrentes como clima, lugares e acontecimentos da vila.
 - Partidas diferentes podem começar com arcos narrativos diferentes, por exemplo: chuva e pegadas, sino da capela, neblina no moinho, carta encontrada, janela quebrada ou outro acontecimento compatível com o universo do jogo.
+- O mini-enredo pode fornecer contexto para as opções das tasks, como investigar capela, praça, moinho ou outro ponto ativado pelo arco daquela sessão.
 - A narrativa **não pode revelar nem insinuar de forma determinística informação secreta** sobre Assassino, Xerife, Anjo, investigação, proteção ou alvo privado.
 - Na V1, a implementação recomendada é um motor narrativo baseado em templates, tags e estado público sanitizado, sem depender obrigatoriamente de IA generativa em tempo real.
 - Os mini-enredos devem funcionar em celular e desktop, com apresentação curta, legível, atmosférica e sem bloquear ações importantes.
-- A decisão de permitir que esses enredos alterem mecanicamente a partida ainda não está aprovada; por enquanto, está aprovada a existência da camada narrativa dinâmica.
+- A decisão de permitir que esses enredos alterem mecanicamente a partida além de contextualizar as tasks ainda não está aprovada.
 
 ### Xerife
 
 - O **Xerife trabalha sozinho** durante sua ação investigativa; não existe canal privado de aliados, chat secreto ou grupo especial para ele.
+- Durante o dia, pode organizar uma lista privada de suspeitos.
+- Durante a noite, escolhe um suspeito/alvo válido para **acompanhar**.
 - A investigação é uma informação privada do próprio Xerife.
-- A cada investigação válida, o Xerife recebe somente uma resposta binária sobre o alvo: **“É Assassino”** ou **“Não é Assassino”**.
+- Pela regra atualmente aprovada, uma investigação válida entrega a resposta binária **“É Assassino”** ou **“Não é Assassino”**.
 - O Xerife **não descobre o personagem exato** do alvo. Assim, Cidadão e Anjo permanecem indistinguíveis entre si para essa habilidade.
-- Essa escolha segue a estrutura clássica de papéis investigativos em Mafia/Cop, preservando informação útil sem resolver o tabuleiro inteiro cedo demais.
+- O novo conceito de “acompanhar” não autoriza automaticamente que o Xerife veja o trajeto, o local visitado ou a ação exata do alvo; isso requer decisão específica.
 - Quando a fase de discussão começa, o chat escrito e a voz geral dos jogadores vivos ficam disponíveis conforme as regras normais da discussão.
 - O Xerife pode usar o que descobriu para acusar, sugerir suspeitos, blefar ou tentar convencer os demais — funcionando socialmente como uma espécie de “X9”.
 - O sistema **não confirma publicamente** que o Xerife está dizendo a verdade, não identifica automaticamente o Xerife para os outros jogadores e não publica sua investigação.
@@ -109,6 +123,7 @@ A aprovação dos quatro nomes/papéis **não aprova automaticamente detalhes de
 - O servidor será a fonte confiável do estado da partida.
 - Tokens de voz deverão ser emitidos no servidor e ser curtos/temporários.
 - Credenciais privadas não poderão ser enviadas ao navegador nem versionadas.
+- Tasks, rotas, consequências, investigação, proteção e ataque devem ser validados pelo servidor.
 
 ### Repositórios
 
