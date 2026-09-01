@@ -58,6 +58,18 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - No mobile, o caderno deve abrir como painel/drawer/card sem esconder permanentemente voz, timer ou ação principal. No desktop, pode coexistir lateralmente com a discussão quando houver espaço.
 - Essas tasks não podem revelar publicamente personagem, investigação secreta ou informação privada sem uma ação explícita do jogador e sem respeito às regras da partida.
 
+### Mini-enredos dinâmicos
+
+- O jogo deve contar **mini-enredos durante a própria partida**.
+- Esses mini-enredos devem variar de partida para partida e de rodada para rodada, evitando que a experiência pareça repetir sempre os mesmos textos.
+- A narrativa pode reagir a acontecimentos públicos reais da sessão, como amanhecer sem eliminação, eliminação noturna, julgamento, diminuição do número de jogadores e outros eventos já autorizados pelo motor.
+- A mesma partida deve manter uma pequena continuidade narrativa, usando elementos recorrentes como clima, lugares e acontecimentos da vila.
+- Partidas diferentes podem começar com arcos narrativos diferentes, por exemplo: chuva e pegadas, sino da capela, neblina no moinho, carta encontrada, janela quebrada ou outro acontecimento compatível com o universo do jogo.
+- A narrativa **não pode revelar nem insinuar de forma determinística informação secreta** sobre Assassino, Xerife, Anjo, investigação, proteção ou alvo privado.
+- Na V1, a implementação recomendada é um motor narrativo baseado em templates, tags e estado público sanitizado, sem depender obrigatoriamente de IA generativa em tempo real.
+- Os mini-enredos devem funcionar em celular e desktop, com apresentação curta, legível, atmosférica e sem bloquear ações importantes.
+- A decisão de permitir que esses enredos alterem mecanicamente a partida ainda não está aprovada; por enquanto, está aprovada a existência da camada narrativa dinâmica.
+
 ### Xerife
 
 - O **Xerife trabalha sozinho** durante sua ação investigativa; não existe canal privado de aliados, chat secreto ou grupo especial para ele.
