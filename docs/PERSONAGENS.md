@@ -1,108 +1,72 @@
 # Personagens — Vila Oculta
 
-Status: **inventário do legado; composição da primeira versão ainda não aprovada**.
+Status: **composição da primeira versão aprovada**.
 
-Este documento não transforma sugestões antigas em decisões finais. Ele registra apenas os personagens e conceitos encontrados na especificação do projeto legado.
+A V1 terá exatamente estes quatro personagens:
 
-## Facção: Moradores
+- **Cidadão**;
+- **Assassino**;
+- **Xerife**;
+- **Anjo**.
 
-### Morador
+Os nomes provisórios encontrados no legado (`Morador`, `Oculto`, `Vigia` e `Guardião`) não serão usados como nomes oficiais da V1.
 
-**Grupo:** Moradores  
-**Objetivo:** eliminar todos os Ocultos.  
-**Poder:** nenhum poder noturno documentado.  
-**Momento de ação:** discussão e votação.  
-**Alvos permitidos:** conforme votação.  
-**Restrições:** não executa ação noturna especial.  
-**Informação revelada:** nenhuma informação privada adicional prevista.  
-**Condição de vitória:** vitória coletiva dos Moradores.  
-**Interação com voz:** participa da discussão conforme permissões da fase.  
-**Interação com chat:** ainda depende da regra de chat por fase.  
-**Interação com eliminação:** eliminado deixa de votar/agredir/interferir; regra de voz ainda pendente.  
-**Risco de balanceamento:** baixo isoladamente; quantidade precisa ser ajustada à composição.
+## Cidadão
 
-### Vigia
+**Papel aprovado:** personagem básico do lado da vila.  
+**Objetivo geral:** participar da dedução, discussão e votação para ajudar a eliminar a ameaça.  
+**Ação noturna especial:** nenhuma ação especial aprovada.  
+**Discussão e votação:** participa normalmente enquanto estiver vivo.  
+**Eliminação:** deixa de votar e de interferir mecanicamente na partida; regra de voz ainda pendente.  
+**Risco de balanceamento:** baixo isoladamente; a quantidade precisa variar conforme o total de jogadores.
 
-**Grupo:** Moradores  
-**Objetivo:** ajudar a identificar a ameaça sem receber informação excessivamente definitiva.  
-**Poder encontrado no legado:** observar um jogador por noite e receber uma informação limitada sobre sua ligação com a ameaça.  
-**Momento de ação:** noite.  
-**Alvos permitidos:** um jogador válido por noite; restrições finais não definidas.  
-**Restrições:** o legado não define exatamente se pode observar a si mesmo, repetir alvo ou qual resposta recebe.  
-**Informação revelada:** informação limitada, não necessariamente o personagem exato.  
-**Condição de vitória:** coletiva dos Moradores.  
-**Interação com voz/chat:** não pode revelar sua ação automaticamente; comunicação continua sendo decisão do jogador.  
-**Interação com eliminação:** perde ação ao ser eliminado.  
-**Risco de balanceamento:** alto se a informação for binária/definitiva demais; o formato exato precisa ser aprovado e testado.
+## Assassino
 
-### Guardião
+**Papel aprovado:** ameaça escondida da partida.  
+**Objetivo geral:** sobreviver à dedução e eliminar jogadores do lado da vila até atingir a condição de vitória definida pelo motor.  
+**Ação noturna:** realiza/participa da escolha de um alvo válido durante a noite.  
+**Informação secreta:** detalhes sobre conhecimento de outros Assassinos e coordenação entre eles ainda precisam ser formalizados conforme a composição numérica.  
+**Eliminação:** perde qualquer ação de jogo ao ser eliminado.  
+**Risco de balanceamento:** quantidade de Assassinos e condição exata de vitória precisam escalar com o número total de jogadores.
 
-**Grupo:** Moradores  
-**Objetivo:** impedir uma consequência noturna contra um jogador.  
-**Poder encontrado no legado:** proteger uma pessoa durante a noite, seguindo regras de equilíbrio.  
-**Momento de ação:** noite.  
-**Alvos permitidos:** jogador válido; regras de auto-proteção/repetição ainda não definidas.  
-**Restrições:** não especificadas em detalhe no legado.  
-**Informação revelada:** o sistema não deve revelar publicamente quem protegeu quem salvo regra explícita.  
-**Condição de vitória:** coletiva dos Moradores.  
-**Interação com voz/chat:** sem permissão especial documentada.  
-**Interação com eliminação:** perde ação ao ser eliminado.  
-**Risco de balanceamento:** pode bloquear eliminações repetidamente se auto-proteção/repetição não forem limitadas.
+## Xerife
 
-### Curandeira
+**Papel aprovado:** personagem investigativo do lado da vila.  
+**Objetivo geral:** obter informação privada que ajude a identificar a ameaça.  
+**Ação noturna:** investiga um alvo válido.  
+**Informação exata entregue pelo sistema:** **ainda não aprovada**. O sistema não deve assumir automaticamente que o Xerife vê o personagem completo ou apenas uma resposta binária.  
+**Auto-alvo/repetição de alvo:** ainda não definidos.  
+**Eliminação:** perde a ação investigativa.  
+**Risco de balanceamento:** alto se a informação for definitiva demais.
 
-**Grupo:** Moradores  
-**Objetivo:** alterar ou impedir consequência noturna de forma limitada.  
-**Poder encontrado no legado:** possui recursos limitados para impedir ou alterar uma consequência noturna.  
-**Momento de ação:** noite/resolução, conforme regra futura.  
-**Alvos permitidos:** não definidos de forma suficiente.  
-**Restrições:** recursos limitados, mas quantidade e efeitos não foram definidos.  
-**Informação revelada:** não definida.  
-**Condição de vitória:** coletiva dos Moradores.  
-**Interação com voz/chat:** sem permissão especial documentada.  
-**Interação com eliminação:** perde habilidade restante ao ser eliminada.  
-**Risco de balanceamento:** elevado pela falta de definição do recurso e pela possível sobreposição com Guardião.
+## Anjo
 
-## Facção: Ocultos
+**Papel aprovado:** personagem protetor do lado da vila.  
+**Objetivo geral:** impedir uma consequência noturna contra um alvo válido.  
+**Ação noturna:** protege um jogador durante a noite.  
+**Auto-proteção:** ainda não definida.  
+**Proteção repetida no mesmo alvo:** ainda não definida.  
+**Quantidade de proteções:** ainda não definida caso exista algum limite.  
+**Informação pública sobre a proteção:** não deve ser revelada sem regra explícita.  
+**Eliminação:** perde a ação de proteção.  
+**Risco de balanceamento:** pode bloquear eliminações repetidamente caso as restrições sejam permissivas demais.
 
-### Oculto
+## Agrupamento mecânico inicial
 
-**Grupo:** Ocultos  
-**Objetivo:** sobreviver à dedução e eliminar/neutralizar Moradores até atingir condição de vitória.  
-**Poder encontrado no legado:** participa da escolha secreta de um alvo durante a noite.  
-**Momento de ação:** noite.  
-**Alvos permitidos:** jogador válido não protegido pelas restrições de facção; regra exata precisa ser formalizada.  
-**Restrições:** não definidas em detalhe no legado.  
-**Informação revelada:** o legado indica que Ocultos conhecem seus aliados.  
-**Condição de vitória:** quando chegam a uma situação em que os Moradores não conseguem mais superá-los; fórmula exata ainda pendente.  
-**Interação com voz:** a arquitetura deve permitir canal privado temporário se a regra da ação coletiva exigir, mas isso ainda não equivale a uma decisão final de produto.  
-**Interação com chat:** não há regra aprovada de chat privado para Ocultos.  
-**Interação com eliminação:** eliminado deixa de executar ação e não deve interferir no resultado.  
-**Risco de balanceamento:** quantidade de Ocultos e forma de coordenação precisam escalar com o número de jogadores.
+Sem definir ainda o nome oficial das facções, a V1 possui dois lados mecânicos:
 
-## Facção: Independentes
+- lado da vila: **Cidadão, Xerife e Anjo**;
+- lado da ameaça: **Assassino**.
 
-O legado prevê uma categoria futura de personagens com condição particular de vitória, mas não define personagem independente específico pronto para implementação.
+A nomenclatura definitiva das facções pode ser decidida separadamente sem alterar os nomes dos quatro personagens já aprovados.
 
-**Status:** não recomendado para o primeiro núcleo até o modo Moradores × Ocultos estar equilibrado.
+## Requisitos de modelagem
 
-## Personagens adicionais futuros mencionados apenas como possibilidade
-
-O legado menciona que outros tipos de Ocultos podem surgir futuramente com habilidades como:
-
-- manipulação;
-- bloqueio;
-- disfarce.
-
-Esses itens não têm nome, regra nem aprovação e **não devem ser implementados agora**.
-
-## Requisitos de modelagem para qualquer personagem aprovado
-
-Todo personagem definitivo deverá ter dados estruturados para:
+Cada personagem deverá possuir dados estruturados para:
 
 - identificador interno estável;
 - nome público;
-- facção;
+- lado/facção;
 - objetivo;
 - habilidade;
 - momento/fase da ação;
@@ -119,18 +83,18 @@ Todo personagem definitivo deverá ter dados estruturados para:
 - ilustração/símbolo;
 - testes unitários das regras.
 
-## Lacunas que precisam ser decididas depois da composição inicial
+## Pontos ainda pendentes
 
-- comportamento exato do Vigia;
-- auto-proteção e repetição do Guardião;
-- recursos/efeitos da Curandeira;
-- modo de coordenação dos Ocultos durante a noite;
-- condição matemática exata de vitória dos Ocultos;
-- revelação ou não de personagem após eliminação por padrão;
-- quantidade de cada personagem por número de jogadores.
+- resposta exata da investigação do Xerife;
+- possibilidade de o Xerife investigar a si mesmo;
+- repetição de alvo do Xerife;
+- possibilidade de auto-proteção do Anjo;
+- repetição de proteção no mesmo jogador;
+- quantidade padrão de Assassinos conforme o total de jogadores;
+- condição matemática exata de vitória do lado dos Assassinos;
+- composição completa por número de jogadores;
+- regra de voz para eliminados;
+- chat durante a noite;
+- revelação ou não do personagem eliminado por padrão.
 
-## Recomendação técnica — não é decisão de produto
-
-Para a primeira implementação, é tecnicamente mais seguro começar com poucos papéis e regras determinísticas, cobrir integralmente distribuição, noite, votação e vitória com testes e só depois adicionar personagens de resolução complexa.
-
-A composição final depende de aprovação do proprietário do projeto.
+Nenhum personagem adicional deve entrar na V1 sem nova aprovação.
