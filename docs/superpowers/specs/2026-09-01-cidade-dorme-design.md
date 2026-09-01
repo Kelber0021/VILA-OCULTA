@@ -6,11 +6,12 @@ Entregar uma demonstração web estática, navegável e responsiva de **CIDADE D
 
 ## Arquitetura
 
-- Next.js App Router com TypeScript estrito e exportação estática para `out/`.
+- Next.js App Router com TypeScript estrito, páginas prerenderizadas e execução como Render Web Service.
 - Rotas: `/`, `/como-jogar`, `/personagens`, `/entrar` e `/lobby`.
 - Componentes interativos locais somente para validação do formulário, cópia do código e prontidão demonstrativa.
 - Navegação interna com `next/link`; nenhuma API, banco ou serviço em tempo real.
 - CSS global organizado por tokens, componentes e breakpoints fluidos.
+- Processo Node ligado a `0.0.0.0` e ao `PORT` fornecido pelo Render; nenhuma API ou backend de jogo.
 
 ## Direção visual
 

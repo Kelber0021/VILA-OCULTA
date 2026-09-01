@@ -4,7 +4,7 @@
 
 **Goal:** Construir, verificar e publicar no Render a primeira demonstração visual interativa de CIDADE DORME.
 
-**Architecture:** Aplicação Next.js App Router exportada estaticamente, com cinco rotas e pequenos componentes cliente para formulário e lobby. O estado é local e demonstrativo; o deploy usa Render Static Site.
+**Architecture:** Aplicação Next.js App Router com cinco rotas prerenderizadas e pequenos componentes cliente para formulário e lobby. O estado é local e demonstrativo; o deploy usa Render Web Service no plano gratuito.
 
 **Tech Stack:** Next.js, React, TypeScript estrito, CSS global, Vitest, Testing Library e Render.
 
@@ -16,7 +16,7 @@
 - Exibir somente a identidade **CIDADE DORME** na interface, metadados e documentação nova.
 - Não implementar nem alegar backend, autenticação, banco, voz ou multiplayer real.
 - Suportar 320 px até Full HD, teclado, foco visível e `prefers-reduced-motion`.
-- Preservar a exportação estática compatível com Render gratuito.
+- Preservar páginas prerenderizadas e processo Node compatível com Render Web Service gratuito.
 
 ---
 
@@ -52,7 +52,7 @@
 **Files:** criar `render.yaml`, headers estáticos compatíveis e documentação final.
 
 - [ ] Executar testes, lint, typecheck e build.
-- [ ] Verificar secrets, rotas proibidas, dependências, diff e exportação `out/`.
+- [ ] Verificar secrets, rotas proibidas, dependências, diff e execução do servidor de produção.
 - [ ] Revisar responsividade, teclado, foco, overflow e reduced motion nos cinco tamanhos-alvo.
 - [ ] Corrigir defeitos por novo ciclo de teste falhando antes da implementação.
 - [ ] Commitar uma entrega coesa, enviar à `main`, confirmar branches remotas, publicar no Render e validar URL/rotas/assets.

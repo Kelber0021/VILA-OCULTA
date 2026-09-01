@@ -30,7 +30,7 @@ npm run typecheck
 npm run build
 ```
 
-O build usa exportação estática do Next.js e gera o diretório `out/`, usado pelo Render Static Site.
+O projeto é publicado como Render Web Service no plano gratuito. O processo Node inicia com `npm run start`, escuta o `PORT` fornecido pelo Render e serve as cinco rotas prerenderizadas pelo Next.js.
 
 ## Estado do produto
 
