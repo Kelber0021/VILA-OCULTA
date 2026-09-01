@@ -21,6 +21,19 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - Supabase não será usado para transportar áudio; a camada de voz será WebRTC com solução apropriada para salas multiplayer.
 - LiveKit é a preferência inicial, mas a escolha Cloud versus self-hosted ainda depende de comparação técnica/custo e aprovação.
 
+### Personagens da primeira versão
+
+A composição de personagens da V1 foi aprovada com estes quatro papéis:
+
+- **Cidadão**;
+- **Assassino**;
+- **Xerife**;
+- **Anjo**.
+
+Os nomes acima substituem, para a V1, os nomes provisórios usados na documentação inicial do legado (`Morador`, `Oculto`, `Vigia` e `Guardião`).
+
+A aprovação dos quatro nomes/papéis **não aprova automaticamente detalhes de habilidade que ainda não foram definidos**, como auto-proteção do Anjo, repetição de alvo, informação exata entregue ao Xerife e composição numérica por quantidade de jogadores.
+
 ### Segurança e autoridade
 
 - Regras críticas, fase atual, permissões e autorização de fala não podem depender apenas do estado do cliente.
