@@ -4,7 +4,6 @@ Este arquivo registra somente itens ainda não concluídos ou que dependem de de
 
 ## Produto
 
-- Definir regra de voz para jogadores eliminados.
 - Definir se o chat escrito ficará ativo em todas as fases ou terá restrições durante a noite.
 - Definir se haverá espectadores na primeira versão.
 - Definir detalhes das habilidades do Xerife e do Anjo.
