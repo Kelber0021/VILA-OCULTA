@@ -49,10 +49,12 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 
 - O **Xerife trabalha sozinho** durante sua ação investigativa; não existe canal privado de aliados, chat secreto ou grupo especial para ele.
 - A investigação é uma informação privada do próprio Xerife.
+- A cada investigação válida, o Xerife recebe somente uma resposta binária sobre o alvo: **“É Assassino”** ou **“Não é Assassino”**.
+- O Xerife **não descobre o personagem exato** do alvo. Assim, Cidadão e Anjo permanecem indistinguíveis entre si para essa habilidade.
+- Essa escolha segue a estrutura clássica de papéis investigativos em Mafia/Cop, preservando informação útil sem resolver o tabuleiro inteiro cedo demais.
 - Quando a fase de discussão começa, o chat escrito e a voz geral dos jogadores vivos ficam disponíveis conforme as regras normais da discussão.
 - O Xerife pode usar o que descobriu para acusar, sugerir suspeitos, blefar ou tentar convencer os demais — funcionando socialmente como uma espécie de “X9”.
 - O sistema **não confirma publicamente** que o Xerife está dizendo a verdade, não identifica automaticamente o Xerife para os outros jogadores e não publica sua investigação.
-- A força exata da informação recebida na investigação ainda será definida separadamente.
 
 ### Voz de jogadores eliminados
 
@@ -74,7 +76,7 @@ A composição de personagens da V1 foi aprovada com estes quatro papéis:
 
 Os nomes acima substituem, para a V1, os nomes provisórios usados na documentação inicial do legado (`Morador`, `Oculto`, `Vigia` e `Guardião`).
 
-A aprovação dos quatro nomes/papéis **não aprova automaticamente detalhes de habilidade que ainda não foram definidos**, como auto-proteção do Anjo, repetição de alvo, informação exata entregue ao Xerife e composição numérica por quantidade de jogadores.
+A aprovação dos quatro nomes/papéis **não aprova automaticamente detalhes de habilidade que ainda não foram definidos**, como auto-proteção do Anjo, repetição de alvo e composição numérica por quantidade de jogadores.
 
 ### Segurança e autoridade
 
