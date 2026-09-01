@@ -45,6 +45,19 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - A apresentação visual deve reduzir pistas observáveis sobre quem está apenas aguardando e quem está executando uma ação secreta.
 - A animação deve existir e funcionar tanto em celular quanto em desktop, adaptando enquadramento, controles e densidade ao viewport.
 
+### Tasks investigativas durante a partida
+
+- As tasks fazem parte da **partida em andamento**, não são missões de progresso de conta.
+- Durante a fase de discussão/investigação, o jogo pode fazer perguntas curtas para ajudar o jogador a organizar sua suspeita antes de acusar alguém.
+- Exemplos aprovados de perguntas: **“Quem chamou sua atenção?”**, **“Por que ele é suspeito?”**, **“O que aconteceu?”** e **“Qual indício sustenta sua acusação?”**.
+- As respostas formam um **caderno de investigação/suspeitas** privado do jogador, relacionando indícios a jogadores específicos.
+- Antes de formalizar uma acusação, a interface deve pedir ao jogador que selecione ou registre pelo menos um motivo/indício para aquela acusação.
+- O sistema não deve tratar opinião do jogador como verdade objetiva. O que ele registra são **indícios, observações e argumentos**, não confirmação automática de culpa.
+- Evidências objetivas produzidas pelo próprio motor, quando uma regra permitir que aquele jogador as conheça, podem ser registradas separadamente de opiniões sociais.
+- A mecânica deve ser rápida e intuitiva, com perguntas curtas, opções tocáveis/clicáveis e campo opcional para observação livre; não deve transformar a discussão em formulário burocrático.
+- No mobile, o caderno deve abrir como painel/drawer/card sem esconder permanentemente voz, timer ou ação principal. No desktop, pode coexistir lateralmente com a discussão quando houver espaço.
+- Essas tasks não podem revelar publicamente personagem, investigação secreta ou informação privada sem uma ação explícita do jogador e sem respeito às regras da partida.
+
 ### Xerife
 
 - O **Xerife trabalha sozinho** durante sua ação investigativa; não existe canal privado de aliados, chat secreto ou grupo especial para ele.
