@@ -1,55 +1,37 @@
-# Vila Oculta
+# CIDADE DORME
 
-Vila Oculta é um jogo social de dedução multiplayer para navegador, inspirado na dinâmica de Cidade Dorme, mas com identidade, personagens, atmosfera e experiência próprias.
+Demonstração visual interativa de um jogo de dedução social ambientado numa vila colonial brasileira durante a noite.
 
-## Objetivo
+Esta primeira versão oferece cinco telas navegáveis, validação local do formulário e um lobby fictício com estado de prontidão local. Ela **não** possui autenticação, backend, banco de dados, voz, sincronização ou multiplayer real.
 
-Construir uma aplicação web moderna, responsiva, segura e com aparência de jogo completo, permitindo que jogadores participem remotamente pelo navegador em computador, notebook, tablet, Android e iPhone.
+## Rotas
 
-Toda a comunicação da partida deverá ocorrer dentro do próprio jogo, incluindo:
+- `/` — início e visão geral da dinâmica;
+- `/como-jogar` — sete etapas essenciais da partida;
+- `/personagens` — Cidadão, Assassino, Xerife e Anjo;
+- `/entrar` — formulário demonstrativo para entrar numa sala;
+- `/lobby` — prévia interativa do lobby `NEVOA7`.
 
-- chat de voz em tempo real;
-- chat escrito em tempo real;
-- lobby multiplayer;
-- salas privadas por código/link;
-- regras e fases sincronizadas;
-- distribuição secreta de personagens;
-- votação e ações protegidas pelo servidor;
-- reconexão;
-- moderação do anfitrião.
+## Desenvolvimento
 
-## Direção técnica inicial
+Requer Node.js compatível com Next.js 16 e npm.
 
-Stack preferencial, sujeita às decisões arquiteturais documentadas:
+```bash
+npm install
+npm run dev
+```
 
-- Next.js (App Router)
-- React
-- TypeScript estrito
-- Tailwind CSS
-- Zod
-- Supabase + PostgreSQL + Realtime
-- LiveKit / WebRTC para voz
-- Vitest + Testing Library
-- Playwright
-- Render
+Verificações disponíveis:
 
-## Repositório antigo
+```bash
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
 
-O repositório `Kelber0021/CIDADE-DORME-` será utilizado somente como referência para entender regras, personagens, telas, textos, assets, fluxo da partida e limitações técnicas. Ele não deverá ser modificado.
+O build usa exportação estática do Next.js e gera o diretório `out/`, usado pelo Render Static Site.
 
-## Estado atual
+## Estado do produto
 
-Projeto em fase de auditoria e definição arquitetural.
-
-As decisões aprovadas serão registradas em `docs/DECISOES.md` e as pendências em `docs/PENDENCIAS.md`.
-
-## Princípios do projeto
-
-- aplicação concebida para web desde o início;
-- mobile-first, sem sacrificar a experiência desktop;
-- aparência de jogo, não de dashboard ou SaaS;
-- servidor como fonte confiável das regras críticas;
-- voz integrada no próprio jogo via WebRTC;
-- nenhuma gravação de áudio por padrão;
-- segurança, privacidade e acessibilidade tratadas desde a fundação;
-- nenhuma credencial real versionada no GitHub.
+Esta entrega valida identidade visual, conteúdo, navegação, responsividade e microinterações locais. Recursos em tempo real permanecem fora do escopo e não são simulados como operacionais.
