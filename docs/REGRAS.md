@@ -89,7 +89,7 @@ Na versão atual, a discussão será remota e ocorrerá por voz integrada no Vil
 
 A arquitetura deve permitir que as permissões de voz variem por fase.
 
-A regra definitiva sobre fala de jogadores eliminados continua pendente.
+Jogadores eliminados não participam do canal de voz dos vivos. Ao serem eliminados, são movidos para um canal exclusivo de eliminados, separado do canal dos vivos.
 
 ## 8. Votação
 
@@ -124,9 +124,10 @@ Regras conhecidas:
 - jogador eliminado deixa de votar;
 - jogador eliminado deixa de realizar ações;
 - jogador eliminado não deve receber informações secretas adicionais;
-- jogador eliminado continua conectado para acompanhar acontecimentos públicos.
-
-A regra de voz dos eliminados permanece pendente.
+- jogador eliminado continua conectado para acompanhar acontecimentos públicos;
+- ao ser eliminado, o jogador sai do canal de voz dos vivos e entra no canal exclusivo dos eliminados;
+- o canal dos eliminados é isolado: vivos não ouvem eliminados e eliminados não transmitem áudio aos vivos;
+- a separação deve ser garantida pelo servidor/serviço de voz, não apenas por controles visuais.
 
 ## 11. Vitória
 
@@ -173,7 +174,9 @@ A nova versão pode manter essas opções, após validação de UX e balanceamen
 - sem gravação por padrão;
 - autorização de fala validada no servidor/serviço de voz;
 - lobby pode permitir todos falarem;
-- fases podem alterar permissões.
+- fases podem alterar permissões;
+- jogadores vivos e eliminados usam canais separados após a eliminação;
+- tokens/permissões de voz precisam impedir que um eliminado reentre no canal dos vivos por manipulação do cliente.
 
 ### Chat escrito
 
@@ -214,7 +217,6 @@ O servidor será a fonte confiável de:
 - composição padrão por quantidade de jogadores;
 - condição matemática exata de vitória dos Assassinos;
 - regra padrão de empate;
-- voz de eliminados;
 - chat durante a noite;
 - espectadores;
 - limites definitivos de jogadores para a primeira versão.
