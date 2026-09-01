@@ -21,6 +21,15 @@ Este arquivo registra somente decisões já aprovadas pelo proprietário do proj
 - Supabase não será usado para transportar áudio; a camada de voz será WebRTC com solução apropriada para salas multiplayer.
 - LiveKit é a preferência inicial, mas a escolha Cloud versus self-hosted ainda depende de comparação técnica/custo e aprovação.
 
+### Voz de jogadores eliminados
+
+- Ao ser eliminado, o jogador **deixa imediatamente o canal de voz dos jogadores vivos**.
+- O eliminado entra em um **canal de voz exclusivo para jogadores eliminados**.
+- Jogadores vivos não podem ouvir o canal dos eliminados.
+- Jogadores eliminados não podem falar nem transmitir áudio para o canal dos vivos.
+- Essa separação deve ser aplicada no servidor/serviço de voz, e não apenas pela interface.
+- O jogador eliminado continua acompanhando apenas os acontecimentos públicos da partida.
+
 ### Personagens da primeira versão
 
 A composição de personagens da V1 foi aprovada com estes quatro papéis:
