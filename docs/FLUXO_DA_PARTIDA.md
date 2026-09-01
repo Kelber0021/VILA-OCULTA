@@ -112,6 +112,8 @@ A tela principal deve mostrar:
 - estado de conexão/reconexão;
 - controles de anfitrião permitidos.
 
+Jogadores eliminados não participam da conversa de voz dos vivos. Eles permanecem em um canal separado exclusivo de eliminados.
+
 ## 9. Votação
 
 1. servidor abre votação;
@@ -141,16 +143,20 @@ Jogador eliminado:
 - não executa ação noturna;
 - não recebe informação secreta nova;
 - acompanha acontecimentos públicos;
-- não consegue alterar resultado por manipulação do cliente.
+- não consegue alterar resultado por manipulação do cliente;
+- é removido do canal de voz dos vivos;
+- entra no canal de voz exclusivo dos eliminados;
+- pode conversar com outros eliminados nesse canal;
+- não pode transmitir áudio aos vivos nem ouvir o canal privado dos vivos.
 
-A regra de voz após eliminação ainda precisa de decisão.
+A troca de canal deve ser imposta pelo servidor/serviço de voz, inclusive após recarregamento da página, reconexão ou tentativa de manipular o cliente.
 
 ## 12. Verificação de vitória
 
 Após cada resolução relevante, o servidor avalia:
 
-- se restam Ocultos;
-- se a condição de vitória dos Ocultos foi alcançada;
+- se restam Assassinos;
+- se a condição de vitória dos Assassinos foi alcançada;
 - futuras condições independentes, se existirem.
 
 Se ninguém venceu, inicia-se novo ciclo. Se existe vencedor, vai para resultado.
@@ -159,7 +165,7 @@ Se ninguém venceu, inicia-se novo ciclo. Se existe vencedor, vai para resultado
 
 Tela final deve poder apresentar:
 
-- facção vencedora;
+- lado/facção vencedora;
 - personagens após o fim da partida;
 - acontecimentos principais;
 - votos/ações quando a política permitir;
@@ -177,7 +183,8 @@ Reconexão é um fluxo transversal:
 4. servidor retorna snapshot autoritativo;
 5. Realtime e voz são reconectados;
 6. jogador volta à tela/estado correto sem repetir ação já confirmada;
-7. atualização de página deve seguir o mesmo princípio.
+7. se estiver eliminado, retorna ao canal de voz dos eliminados e nunca ao canal dos vivos;
+8. atualização de página deve seguir o mesmo princípio.
 
 ## 15. Máquina de estados sugerida
 
