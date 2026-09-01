@@ -11,13 +11,17 @@ A V1 terá exatamente estes quatro personagens:
 
 Os nomes provisórios encontrados no legado (`Morador`, `Oculto`, `Vigia` e `Guardião`) não serão usados como nomes oficiais da V1.
 
+## Regra comum de voz após eliminação
+
+Ao ser eliminado, qualquer personagem deixa o canal de voz dos vivos e passa para um canal exclusivo de eliminados. O jogador eliminado não pode transmitir áudio para os vivos nem ouvir conversas privadas destinadas somente aos vivos. A separação deve ser garantida pelo servidor/serviço de voz.
+
 ## Cidadão
 
 **Papel aprovado:** personagem básico do lado da vila.  
 **Objetivo geral:** participar da dedução, discussão e votação para ajudar a eliminar a ameaça.  
 **Ação noturna especial:** nenhuma ação especial aprovada.  
 **Discussão e votação:** participa normalmente enquanto estiver vivo.  
-**Eliminação:** deixa de votar e de interferir mecanicamente na partida; regra de voz ainda pendente.  
+**Eliminação:** deixa de votar e de interferir mecanicamente na partida; passa ao canal de voz dos eliminados.  
 **Risco de balanceamento:** baixo isoladamente; a quantidade precisa variar conforme o total de jogadores.
 
 ## Assassino
@@ -26,7 +30,7 @@ Os nomes provisórios encontrados no legado (`Morador`, `Oculto`, `Vigia` e `Gua
 **Objetivo geral:** sobreviver à dedução e eliminar jogadores do lado da vila até atingir a condição de vitória definida pelo motor.  
 **Ação noturna:** realiza/participa da escolha de um alvo válido durante a noite.  
 **Informação secreta:** detalhes sobre conhecimento de outros Assassinos e coordenação entre eles ainda precisam ser formalizados conforme a composição numérica.  
-**Eliminação:** perde qualquer ação de jogo ao ser eliminado.  
+**Eliminação:** perde qualquer ação de jogo e passa ao canal de voz dos eliminados.  
 **Risco de balanceamento:** quantidade de Assassinos e condição exata de vitória precisam escalar com o número total de jogadores.
 
 ## Xerife
@@ -36,7 +40,7 @@ Os nomes provisórios encontrados no legado (`Morador`, `Oculto`, `Vigia` e `Gua
 **Ação noturna:** investiga um alvo válido.  
 **Informação exata entregue pelo sistema:** **ainda não aprovada**. O sistema não deve assumir automaticamente que o Xerife vê o personagem completo ou apenas uma resposta binária.  
 **Auto-alvo/repetição de alvo:** ainda não definidos.  
-**Eliminação:** perde a ação investigativa.  
+**Eliminação:** perde a ação investigativa e passa ao canal de voz dos eliminados.  
 **Risco de balanceamento:** alto se a informação for definitiva demais.
 
 ## Anjo
@@ -48,7 +52,7 @@ Os nomes provisórios encontrados no legado (`Morador`, `Oculto`, `Vigia` e `Gua
 **Proteção repetida no mesmo alvo:** ainda não definida.  
 **Quantidade de proteções:** ainda não definida caso exista algum limite.  
 **Informação pública sobre a proteção:** não deve ser revelada sem regra explícita.  
-**Eliminação:** perde a ação de proteção.  
+**Eliminação:** perde a ação de proteção e passa ao canal de voz dos eliminados.  
 **Risco de balanceamento:** pode bloquear eliminações repetidamente caso as restrições sejam permissivas demais.
 
 ## Agrupamento mecânico inicial
@@ -93,7 +97,6 @@ Cada personagem deverá possuir dados estruturados para:
 - quantidade padrão de Assassinos conforme o total de jogadores;
 - condição matemática exata de vitória do lado dos Assassinos;
 - composição completa por número de jogadores;
-- regra de voz para eliminados;
 - chat durante a noite;
 - revelação ou não do personagem eliminado por padrão.
 
