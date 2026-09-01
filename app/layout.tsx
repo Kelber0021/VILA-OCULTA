@@ -1,7 +1,30 @@
 import type { Metadata, Viewport } from "next";
+import { Bodoni_Moda, Work_Sans, Courier_Prime } from "next/font/google";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import "./globals.css";
+
+const display = Bodoni_Moda({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const body = Work_Sans({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const mono = Courier_Prime({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: { default: "Cidade Dorme", template: "%s — Cidade Dorme" },
@@ -21,7 +44,7 @@ const navigation = [
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
         <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
         <header className="site-header">

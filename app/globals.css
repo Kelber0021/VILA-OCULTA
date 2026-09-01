@@ -9,9 +9,9 @@
   --muted: #aeb7cb;
   --ready: #70bfa5;
   --error: #f08a8a;
-  --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --body: Manrope, Inter, system-ui, sans-serif;
-  --mono: "IBM Plex Mono", "Cascadia Mono", monospace;
+  --display: var(--font-display), "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --body: var(--font-body), Manrope, Inter, system-ui, sans-serif;
+  --mono: var(--font-mono), "IBM Plex Mono", "Cascadia Mono", monospace;
   --border: rgba(238, 240, 246, 0.14);
 }
 
