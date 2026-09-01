@@ -4,7 +4,7 @@ Este arquivo registra somente itens ainda não concluídos ou que dependem de de
 
 ## Produto
 
-- Definir quais personagens entrarão na primeira versão, após conclusão da auditoria do legado.
+- Definir quais personagens entrarão na primeira versão.
 - Definir regra de voz para jogadores eliminados.
 - Definir se o chat escrito ficará ativo em todas as fases ou terá restrições durante a noite.
 - Definir se haverá espectadores na primeira versão.
@@ -12,7 +12,7 @@ Este arquivo registra somente itens ainda não concluídos ou que dependem de de
 
 ## GitHub
 
-- Convidar `josepkaua` como colaborador com permissão de escrita e confirmar o convite. A capacidade disponível do conector deve ser verificada antes de declarar o convite como enviado.
+- `josepkaua` já foi verificado com permissão `write` no repositório oficial. Nenhuma pendência atual nesse item.
 
 ## Infraestrutura
 
@@ -20,7 +20,7 @@ Este arquivo registra somente itens ainda não concluídos ou que dependem de de
 - Verificar se já existe serviço Render equivalente antes de criar outro.
 - Configurar credenciais somente em ambientes seguros; nunca versionar segredos reais.
 
-## Auditoria
+## Auditoria e segurança
 
-- Concluir inventário de regras, personagens, telas, assets e limitações do `Kelber0021/CIDADE-DORME-`.
+- Auditoria inicial de regras, personagens, telas, assets e limitações do `Kelber0021/CIDADE-DORME-`: concluída e registrada em `docs/AUDITORIA_LEGADO.md`.
 - Executar varredura de segredos no histórico antes da publicação.
