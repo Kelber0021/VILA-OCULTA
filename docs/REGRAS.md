@@ -55,21 +55,26 @@ A reconstrução adicionará estados técnicos explícitos para preparação, di
 
 ## 5. Noite
 
-Regras já documentadas:
+Regras aprovadas/documentadas:
 
 - jogadores com ações secretas agem durante a noite;
 - jogadores só podem selecionar alvos válidos;
 - ação deve exigir confirmação;
 - ações são resolvidas seguindo ordem consistente;
-- jogadores sem habilidade noturna devem receber uma experiência neutra que não revele quem está ativo;
-- a interface não deve entregar personagens por sons/animações exclusivos observáveis por terceiros;
-- o servidor deve validar fase, personagem, alvo e permissão antes de aceitar ação.
+- jogadores sem habilidade noturna recebem uma experiência visual/animada de espera, nunca uma tela vazia;
+- jogadores com habilidade noturna também recebem transição/animação coerente com a mesma atmosfera antes/junto da interface privada de ação;
+- a apresentação deve reduzir pistas externas sobre quem está apenas aguardando e quem está agindo;
+- a interface não deve entregar personagens por sons/animações observáveis que denunciem a função;
+- o servidor valida fase, personagem, alvo e permissão antes de aceitar ação;
+- o **chat escrito fica completamente oculto durante a noite** para a interface dos jogadores vivos;
+- o chat reaparece apenas quando a fase de discussão/comunicação permitida começar novamente;
+- a experiência noturna precisa funcionar de forma equivalente em celular e desktop, com composição adaptada ao viewport.
 
 Na V1:
 
-- o **Cidadão** não possui ação noturna especial aprovada;
+- o **Cidadão** não possui ação noturna especial aprovada e permanece na experiência animada de espera;
 - o **Assassino** participa da ação noturna contra um alvo válido;
-- o **Xerife** realiza uma investigação noturna, cujo resultado exato ainda será definido;
+- o **Xerife** investiga sozinho um alvo válido;
 - o **Anjo** realiza uma proteção noturna, cujas restrições de auto-alvo e repetição ainda serão definidas.
 
 ## 6. Amanhecer
@@ -85,7 +90,13 @@ A causa exata não deve ser revelada quando isso destruir a dedução.
 
 ## 7. Discussão
 
-Na versão atual, a discussão será remota e ocorrerá por voz integrada no Vila Oculta.
+Na versão atual, a discussão será remota e ocorrerá por **voz e chat escrito integrados ao Vila Oculta**.
+
+Quando a discussão começa, o chat que estava oculto durante a noite volta a ficar disponível para os jogadores autorizados.
+
+O **Xerife trabalha sozinho durante a investigação**, mas na discussão volta ao canal geral dos vivos. Ele pode usar sua informação para acusar, sugerir suspeitos, blefar ou tentar convencer os demais, funcionando socialmente como uma espécie de “X9”.
+
+O sistema não revela publicamente que ele é Xerife, não publica sua investigação e não confirma para os demais se o que ele disse é verdadeiro.
 
 A arquitetura deve permitir que as permissões de voz variem por fase.
 
@@ -184,11 +195,27 @@ A nova versão pode manter essas opções, após validação de UX e balanceamen
 - em tempo real;
 - histórico temporário da sessão;
 - proteção contra spam/XSS/duplicação;
-- moderação do anfitrião.
+- moderação do anfitrião;
+- **fica oculto durante a noite**;
+- volta a aparecer na fase de discussão/comunicação permitida;
+- deve reorganizar-se de forma adequada entre painel desktop e interface mobile sem bloquear a área principal do jogo.
 
-Ainda precisa ser decidido se o chat ficará ativo durante todas as fases ou terá restrições na noite.
+## 15. Responsividade e interação web
 
-## 15. Segurança das regras
+Toda regra de interface vale para navegador de PC e celular.
+
+- mobile-first, mas desktop com composição própria;
+- suporte a toque, mouse e teclado quando aplicável;
+- sem rolagem horizontal da página;
+- sem controles ou informações críticas fora da viewport;
+- timers, voz, chat, votação e ações secretas sempre acessíveis;
+- modais e overlays devem caber em telas pequenas e grandes;
+- teclado virtual e safe areas não podem esconder controles essenciais;
+- animações devem adaptar enquadramento e densidade sem impedir interação;
+- `prefers-reduced-motion` deve ser respeitado;
+- cada tela deverá ser validada em viewport mobile e desktop antes de ser considerada pronta.
+
+## 16. Segurança das regras
 
 Nenhuma regra crítica pode depender apenas de:
 
@@ -210,13 +237,12 @@ O servidor será a fonte confiável de:
 - vitória;
 - autorização para falar.
 
-## 16. Pontos ainda pendentes
+## 17. Pontos ainda pendentes
 
 - resposta exata da investigação do Xerife;
 - auto-proteção/repetição do Anjo;
 - composição padrão por quantidade de jogadores;
 - condição matemática exata de vitória dos Assassinos;
 - regra padrão de empate;
-- chat durante a noite;
 - espectadores;
 - limites definitivos de jogadores para a primeira versão.
