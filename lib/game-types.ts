@@ -3,6 +3,9 @@ export type AvatarId = (typeof AVATAR_IDS)[number];
 export type Role = "citizen" | "assassin" | "sheriff" | "angel";
 export type Phase = "lobby" | "night" | "discussion" | "voting" | "results" | "finished";
 export type Winner = "village" | "assassin";
+export const ROOM_PACES = ["quick", "classic", "relaxed"] as const;
+export type RoomPace = (typeof ROOM_PACES)[number];
+export interface RoomSettings { pace: RoomPace; maxPlayers: number }
 export interface PlayerView {
   id: string;
   name: string;
@@ -17,6 +20,7 @@ export interface PlayerView {
 export interface NarrationEvent { id: string; text: string; at: number }
 export interface ChatMessage { id: string; playerId: string; playerName: string; text: string; at: number }
 export interface RoomView {
+  settings: RoomSettings;
   code: string;
   phase: Phase;
   round: number;
@@ -41,6 +45,7 @@ export type RoomAction =
   | { type: "avatar"; avatarId: AvatarId }
   | { type: "start" }
   | { type: "rematch" }
+  | { type: "configure"; pace: RoomPace; maxPlayers: number }
   | { type: "night"; targetId: string }
   | { type: "vote"; targetId: string | null }
   | { type: "chat"; text: string }

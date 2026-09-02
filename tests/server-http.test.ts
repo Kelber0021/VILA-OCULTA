@@ -34,3 +34,29 @@ describe("HTTP security boundary", () => {
     expect((await (await handle(authenticated, "current")).json()).room).toBeNull();
   });
 });
+
+describe("configure HTTP validation", () => {
+  it("rejects extra fields, missing fields, invalid pace, and non-integer capacity before mutation", async () => {
+    for (const data of [
+      { type: "configure", pace: "quick", maxPlayers: 5, role: "assassin" },
+      { type: "configure", pace: "quick" },
+      { type: "configure", pace: "__proto__", maxPlayers: 8 },
+      { type: "configure", pace: "classic", maxPlayers: "4" },
+      { type: "configure", pace: "relaxed", maxPlayers: 4.5 },
+      { type: "configure", pace: "quick", maxPlayers: 9 },
+      { type: "configure", pace: "quick", maxPlayers: 3 },
+    ]) {
+      expect((await handle(request(data), "action", "AAAAAA")).status).toBe(400);
+    }
+  });
+
+  it("accepts a valid authenticated host configuration and returns the same capacity publicly", async () => {
+    const created = await handle(request({ name: "Pessoa ajustes", avatarId: "clara" }), "create");
+    const cookie = created.headers.get("set-cookie")!.split(";")[0];
+    const { room } = await created.json();
+    const updated = await handle(request({ type: "configure", pace: "relaxed", maxPlayers: 5 }, { cookie }), "action", room.code);
+    expect(updated.status).toBe(200);
+    expect((await updated.json()).room).toMatchObject({ settings: { pace: "relaxed", maxPlayers: 5 }, maxPlayers: 5 });
+    await handle(request({ type: "leave" }, { cookie }), "action", room.code);
+  });
+});

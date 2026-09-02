@@ -12,9 +12,23 @@ Todas as respostas bem-sucedidas seguem `{ room: RoomView | null }`; falhas segu
 | POST `/api/rooms/join` | `{ code, name, avatarId }` |
 | GET `/api/rooms/current` | Recupera a sala da sessão, ou `null` |
 | GET `/api/rooms/:code` | Estado filtrado para o participante autenticado |
-| POST `/api/rooms/:code/action` | `{ type: "ready", ready }`, `{ type: "avatar", avatarId }`, `{ type: "start" }`, `{ type: "rematch" }`, `{ type: "night", targetId }`, `{ type: "vote", targetId }`, `{ type: "chat", text }`, `{ type: "leave" }` |
+| POST `/api/rooms/:code/action` | `{ type: "ready", ready }`, `{ type: "avatar", avatarId }`, `{ type: "start" }`, `{ type: "rematch" }`, `{ type: "configure", pace, maxPlayers }`, `{ type: "night", targetId }`, `{ type: "vote", targetId }`, `{ type: "chat", text }`, `{ type: "leave" }` |
 
 Retratos: `ana`, `bento`, `clara`, `davi`, `elisa`, `joaquim`. Retratos são cosméticos e podem se repetir. Nomes devem ter 2 a 24 caracteres permitidos e ser únicos na sala. Códigos possuem seis caracteres gerados por fonte criptográfica.
+
+## Configurações da sala
+
+Toda sala começa com `settings: { pace: "classic", maxPlayers: 8 }`. Durante a preparação, somente o anfitrião pode enviar `configure`, com `pace` entre `quick`, `classic` e `relaxed`, e `maxPlayers` inteiro de 4 a 8. A capacidade nunca pode ser menor que o número de pessoas presentes; a entrada de novas pessoas respeita esse limite. Os demais participantes podem consultar a configuração, mas não alterá-la.
+
+| Ritmo | Noite | Discussão | Votação | Resultado |
+| --- | --- | --- | --- | --- |
+| `quick` — rápido | 25 s | 35 s | 20 s | 8 s |
+| `classic` — clássico | 35 s | 45 s | 30 s | 8 s |
+| `relaxed` — tranquilo | 60 s | 90 s | 45 s | 8 s |
+
+Mudar ritmo ou capacidade desmarca a prontidão de todos e anuncia a alteração na narração. Reenviar os mesmos valores não altera a prontidão. Configurações ficam bloqueadas durante a partida e são preservadas ao jogar novamente. O campo legado `maxPlayers` da resposta espelha `settings.maxPlayers`. Os tempos abaixo descrevem o ritmo clássico; o motor aplica os prazos da tabela para os outros ritmos.
+
+Durante desenvolvimento, recarregar o módulo atualiza os métodos do armazenamento compartilhado sem descartar sessões; salas legadas sem configuração recebem clássico/8. Isso não cria persistência entre reinícios do processo.
 
 ## Dinâmica
 

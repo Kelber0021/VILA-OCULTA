@@ -1,0 +1,139 @@
+.demo {
+  width: min(1160px, 92%);
+  margin: 0 auto;
+  padding: 32px 0 22px;
+}
+
+.intro, .panelTop, .demoFooter { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.intro { margin-bottom: 22px; }
+.intro h1 { font-size: clamp(28px, 3vw, 40px); margin-top: 8px; letter-spacing: -.8px; }
+.soloBadge { flex-shrink: 0; border-left: 1px solid var(--line); padding-left: 22px; color: var(--teal); font-size: 10px; letter-spacing: 1.2px; line-height: 1.8; }
+.soloBadge span { display: block; font-size: 11px; letter-spacing: 0; color: var(--muted); }
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 14px; padding: 0; list-style: none; gap: 8px; }
+.steps li { display: flex; align-items: center; gap: 12px; min-height: 45px; padding: 10px 16px; border: 1px solid var(--line); color: #899b99; border-radius: 5px; font-size: 12px; }
+.steps li > span:first-child { font-size: 18px; }
+.steps li small { margin-left: auto; color: #7c908a; font-size: 10px; }
+.steps .activeStep { border-color: #d5b67d77; background: #d5b67d0c; color: var(--gold); }
+.steps .completedStep { color: var(--teal); }
+.board { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1fr); min-height: 510px; overflow: hidden; border: 1px solid #87938735; border-radius: 10px; background: #102021; box-shadow: 0 22px 70px #0003; }
+.scene { position: relative; isolation: isolate; min-width: 0; min-height: 470px; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; border-right: 1px solid var(--line); }
+.backdrop { object-fit: cover; object-position: 56% center; z-index: -2; }
+.sceneShade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, #071415 0%, #07141565 58%, #0714150f 100%); }
+.sceneCaption { margin-bottom: 28px; }
+.sceneCaption h2 { font-size: clamp(31px, 3vw, 44px); margin: 12px 0; line-height: 1.06; max-width: 300px; letter-spacing: -.7px; }
+.sceneCaption > p:last-child { font-size: 12px; color: #c5cfc5; line-height: 1.6; }
+.selfCard { display: flex; align-items: center; gap: 13px; padding-top: 20px; border-top: 1px solid #d5b67d44; }
+.selfPortrait { width: 52px; height: 65px; border: 1px solid #d5b67d70; border-radius: 4px; }
+.selfCard > div > span { color: var(--gold); font-size: 8px; letter-spacing: 1.3px; }
+.selfCard strong { display: block; font-family: var(--serif); font-size: 24px; font-weight: 400; margin-top: 4px; }
+.selfCard strong small { font-family: var(--sans); font-size: 11px; color: var(--gold); }
+.selfCard p { color: #acbcb4; font-size: 10px; line-height: 1.5; margin-top: 4px; }
+.sheriffStar { margin-left: auto; color: var(--gold); font-size: 26px; }
+.playArea { min-width: 0; padding: 25px 28px 24px; display: flex; flex-direction: column; }
+.panelTop { gap: 12px; margin-bottom: 18px; }
+.panelTop > p { font-size: 8px; letter-spacing: 1.5px; }
+.restart { border: 0; color: #aebbb2; font-size: 10px; padding: 8px 0; white-space: nowrap; }
+.restart:hover, .secondaryAction:hover, .demoFooter a:hover { color: var(--gold); }
+.heading { font-size: clamp(27px, 2.5vw, 33px); line-height: 1.12; margin-bottom: 12px; outline-offset: 6px; }
+.heading:focus { outline: none; }
+.narration { font-size: 12px; color: #b7c6bd; line-height: 1.75; max-width: 480px; }
+.choices { border: 0; padding: 0; margin: 20px 0 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+.suspect { position: relative; border: 1px solid var(--line); padding: 0 0 10px; border-radius: 5px; overflow: hidden; text-align: left; background: #0b1a1b; }
+.suspect:not(:disabled):hover { border-color: #b2baa27a; transform: translateY(-2px); }
+.suspectPortrait { width: 100%; height: 102px; }
+.suspect > span:last-of-type { display: block; padding: 9px 11px 4px; font-family: var(--serif); font-size: 21px; }
+.suspect > small { display: block; padding: 0 11px; color: #a2b4a9; font-size: 9px; }
+.suspect.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.suspect.selected > small { color: var(--gold); }
+.suspect:disabled { opacity: .6; }
+.suspect.selected:disabled { opacity: 1; }
+.clue, .outcome { display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px; background: #d5b67d0c; border: 1px solid #d5b67d33; border-radius: 5px; margin-bottom: 16px; }
+.clue > span, .outcome > span { font-size: 22px; color: var(--gold); line-height: 1; }
+.clue strong, .outcome strong { display: block; font-size: 11px; line-height: 1.6; color: #e5d4ad; }
+.clue p, .outcome p { font-size: 10px; line-height: 1.6; color: #aebeb2; margin-top: 4px; }
+.testimonies { display: grid; gap: 12px; margin: 4px 0 20px; }
+.testimony { display: flex; align-items: center; gap: 12px; }
+.smallPortrait { width: 37px; height: 44px; border-radius: 4px; border: 1px solid var(--line); }
+.testimony h3 { font-family: var(--sans); color: var(--gold); font-size: 11px; margin-bottom: 3px; }
+.testimony p { font-size: 11px; color: #c4cec5; line-height: 1.6; }
+.outcome { margin-top: 18px; }
+.success { background: #7aafa30d; border-color: #7aafa35f; }
+.success > span, .success strong { color: #aacabd; }
+.revealed { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 2px 0 24px; }
+.revealed > div { display: flex; align-items: center; gap: 10px; }
+.revealed p { font-size: 12px; line-height: 1.65; }
+.revealed p span { display: block; color: #a9bcb0; font-size: 10px; }
+.actions { margin-top: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.actions > a, .actions > button:first-child { min-height: 44px; font-size: 11px; gap: 15px; }
+.secondaryAction { color: #c1cbbf; padding: 10px 0; border: 0; font-size: 11px; }
+.hint { margin-top: 12px; font-size: 10px; line-height: 1.6; color: #8fa69a; }
+.demoFooter { margin-top: 17px; font-size: 10px; color: #99afa2; }
+.demoFooter a { color: #cdb98d; }
+
+@media (max-width: 900px) {
+  .demo { width: 94%; }
+  .board { grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); }
+  .scene { padding: 20px; }
+  .playArea { padding: 22px; }
+  .selfCard { gap: 9px; }
+  .selfCard p, .sheriffStar { display: none; }
+}
+
+@media (max-width: 720px) {
+  .demo { padding-top: 22px; width: 92%; }
+  .intro { gap: 12px; align-items: flex-start; flex-direction: column; margin-bottom: 17px; }
+  .intro h1 { font-size: 31px; margin-top: 6px; }
+  .intro > div > p { font-size: 8px; letter-spacing: 1.3px; }
+  .soloBadge { border: 0; padding: 0; font-size: 8px; display: flex; gap: 10px; align-items: center; }
+  .soloBadge span { font-size: 9px; }
+  .steps { gap: 5px; margin-bottom: 10px; }
+  .steps li { min-height: 41px; justify-content: center; gap: 7px; padding: 8px 4px; font-size: 10px; }
+  .steps li > span:first-child { font-size: 14px; }
+  .steps li small { display: none; }
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .scene { min-height: 150px; height: 150px; padding: 18px; flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 10px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .backdrop { object-position: center 44%; }
+  .sceneShade { background: linear-gradient(0deg, #071415f0, #07141520); }
+  .sceneCaption { margin: 0; }
+  .sceneCaption > p { display: none; }
+  .sceneCaption h2 { font-size: 29px; max-width: 190px; margin: 0; }
+  .selfCard { border: 0; padding: 0; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+  .selfPortrait { height: 52px; width: 41px; }
+  .selfCard > div > span { font-size: 7px; letter-spacing: .7px; }
+  .selfCard strong { font-size: 19px; }
+  .selfCard strong small { display: block; font-size: 9px; margin-top: 3px; }
+  .playArea { padding: 19px; }
+  .panelTop { margin-bottom: 12px; }
+  .heading { font-size: 29px; }
+  .narration { font-size: 12px; line-height: 1.65; }
+  .choices { gap: 10px; margin-top: 17px; }
+  .suspectPortrait { height: 98px; }
+  .suspect > span:last-of-type { font-size: 22px; padding-left: 9px; }
+  .suspect > small { padding-left: 9px; font-size: 8px; }
+  .clue strong, .outcome strong { font-size: 11px; }
+  .testimonies { gap: 15px; margin-top: 3px; }
+  .testimony p { font-size: 11px; }
+  .actions { gap: 12px; }
+  .hint { font-size: 10px; }
+  .demoFooter { gap: 12px; font-size: 9px; line-height: 1.6; }
+}
+
+@media (max-width: 380px) {
+  .intro h1 { font-size: 27px; }
+  .soloBadge { flex-wrap: wrap; gap: 2px 8px; }
+  .scene { padding: 15px; min-height: 132px; height: 132px; }
+  .sceneCaption h2 { font-size: 25px; }
+  .selfCard > div > span { display: none; }
+  .selfPortrait { width: 34px; height: 43px; }
+  .playArea { padding: 16px; }
+  .heading { font-size: 26px; }
+  .panelTop > p { font-size: 7px; letter-spacing: .9px; }
+  .suspectPortrait { height: 85px; }
+  .suspect > small { font-size: 7px; }
+  .actions { gap: 8px 12px; }
+  .actions > a, .actions > button:first-child { padding: 11px 13px; gap: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suspect:not(:disabled):hover { transform: none; }
+}

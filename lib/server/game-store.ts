@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomInt, randomUUID } from "node:crypto";
-import { AVATAR_IDS, type AvatarId, type ChatMessage, type NarrationEvent, type Phase, type Role, type RoomAction, type RoomView, type Winner } from "../game-types";
+import { AVATAR_IDS, ROOM_PACES, type AvatarId, type ChatMessage, type NarrationEvent, type Phase, type Role, type RoomAction, type RoomView, type Winner } from "../game-types";
 
 const GAME_ERROR = Symbol.for("vila-oculta.game-error");
 export class GameError extends Error {
@@ -13,13 +13,18 @@ export function isGameError(error: unknown): error is GameError {
     && [400, 401, 403, 404, 409, 413, 415, 429, 503].includes(Reflect.get(error, "status"));
 }
 const HOUR = 60 * 60 * 1000;
-const DURATIONS = { night: 35_000, discussion: 45_000, voting: 30_000, results: 8_000 };
+const DURATIONS = {
+  quick: { night: 25_000, discussion: 35_000, voting: 20_000, results: 8_000 },
+  classic: { night: 35_000, discussion: 45_000, voting: 30_000, results: 8_000 },
+  relaxed: { night: 60_000, discussion: 90_000, voting: 45_000, results: 8_000 },
+};
 interface Player {
   id: string; name: string; avatarId: AvatarId; ready: boolean; alive: boolean;
   role: Role | null;
   investigation: RoomView["self"]["investigation"];
 }
 interface Room {
+  settings: RoomView["settings"];
   code: string; hostId: string; players: Player[]; phase: Phase; round: number;
   phaseEndsAt: number | null; winner: Winner | null; createdAt: number; touchedAt: number;
   narration: NarrationEvent[]; nightActions: Map<string, string>; votes: Map<string, string | null>;
@@ -54,6 +59,8 @@ export class GameStore {
   private cleanup() {
     const now = this.now();
     for (const [code, room] of this.rooms) {
+      // Rooms created before this feature survive development hot reloads.
+      room.settings ??= { pace: "classic", maxPlayers: 8 };
       if (now - room.touchedAt > 2 * HOUR || now - room.createdAt > 12 * HOUR) this.rooms.delete(code);
     }
     for (const [key, session] of this.sessions) {
@@ -84,7 +91,7 @@ export class GameStore {
     const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     do { code = Array.from({ length: 6 }, () => alphabet[randomInt(alphabet.length)]).join(""); } while (this.rooms.has(code));
     const player: Player = { id: randomUUID(), ...data, ready: false, alive: true, role: null, investigation: null };
-    const room: Room = { code, hostId: player.id, players: [player], phase: "lobby", round: 0, phaseEndsAt: null, winner: null,
+    const room: Room = { settings: { pace: "classic", maxPlayers: 8 }, code, hostId: player.id, players: [player], phase: "lobby", round: 0, phaseEndsAt: null, winner: null,
       createdAt: this.now(), touchedAt: this.now(), narration: [], messages: [], nightActions: new Map(), votes: new Map() };
     this.narrate(room, "Uma nova mesa foi aberta. Reúna de 4 a 8 pessoas e prepare-se para a noite.");
     this.rooms.set(code, room);
@@ -100,7 +107,7 @@ export class GameStore {
     const room = this.rooms.get(code);
     check(room, "Sala não encontrada ou expirada.", 404);
     check(room.phase === "lobby", "Esta partida já começou.", 409);
-    check(room.players.length < 8, "A sala está cheia.", 409);
+    check(room.players.length < room.settings.maxPlayers, "A sala está cheia.", 409);
     check(this.sessions.size < 1024, "Servidor ocupado. Tente novamente mais tarde.", 503);
     check(!room.players.some(p => p.name.toLocaleLowerCase("pt-BR") === data.name.toLocaleLowerCase("pt-BR")), "Este nome já está na sala. Escolha outro.", 409);
     const player: Player = { id: randomUUID(), ...data, ready: false, alive: true, role: null, investigation: null };
@@ -142,6 +149,21 @@ export class GameStore {
     const { room, player } = this.member(token, normalizeCode(code));
     this.advance(room);
     room.touchedAt = this.now();
+    if (action.type === "configure") {
+      check(room.hostId === player.id, "Somente o anfitrião pode configurar a sala.", 403);
+      check(room.phase === "lobby", "As configurações só podem mudar antes da partida.", 409);
+      check(ROOM_PACES.includes(action.pace), "Escolha um ritmo disponível.");
+      check(Number.isInteger(action.maxPlayers) && action.maxPlayers >= 4 && action.maxPlayers <= 8,
+        "A capacidade deve ser um número inteiro entre 4 e 8.");
+      check(action.maxPlayers >= room.players.length, "A capacidade não pode ser menor que o grupo presente.", 409);
+      if (room.settings.pace !== action.pace || room.settings.maxPlayers !== action.maxPlayers) {
+        room.settings = { pace: action.pace, maxPlayers: action.maxPlayers };
+        room.players.forEach(participant => { participant.ready = false; });
+        const label = { quick: "rápido", classic: "clássico", relaxed: "tranquilo" }[action.pace];
+        this.narrate(room, `O anfitrião mudou a mesa: ritmo ${label}, até ${action.maxPlayers} pessoas. Confirmem novamente que estão prontos.`);
+      }
+      return this.view(room, player);
+    }
     if (action.type === "rematch") {
       check(room.hostId === player.id, "Somente o anfitrião pode preparar outra partida.", 403);
       check(room.phase === "finished", "A partida atual ainda não terminou.", 409);
@@ -225,9 +247,9 @@ export class GameStore {
     room.narration.push({ id: randomUUID(), text, at: this.now() });
     if (room.narration.length > 30) room.narration.shift();
   }
-  private setPhase(room: Room, phase: keyof typeof DURATIONS) {
+  private setPhase(room: Room, phase: keyof typeof DURATIONS.classic) {
     room.phase = phase;
-    room.phaseEndsAt = this.now() + DURATIONS[phase];
+    room.phaseEndsAt = this.now() + DURATIONS[room.settings.pace][phase];
   }
   private beginNight(room: Room) {
     room.round++;
@@ -291,14 +313,16 @@ export class GameStore {
   }
   private view(room: Room, player: Player): RoomView {
     return {
-      code: room.code, phase: room.phase, round: room.round,
+      settings: { ...room.settings }, code: room.code, phase: room.phase, round: room.round,
       players: room.players.map(p => ({ id: p.id, name: p.name, avatarId: p.avatarId, ready: p.ready, alive: p.alive,
         isHost: p.id === room.hostId, hasVoted: room.votes.has(p.id), ...(room.phase === "finished" && p.role ? { revealedRole: p.role } : {}) })),
       self: { id: player.id, role: player.role, hasActed: room.nightActions.has(player.id), voteTargetId: room.votes.get(player.id) ?? null, investigation: player.investigation ? { ...player.investigation } : null },
-      narration: room.narration.map(event => ({ ...event })), messages: room.messages.map(message => ({ ...message })), phaseEndsAt: room.phaseEndsAt, serverNow: this.now(), winner: room.winner, minPlayers: 4, maxPlayers: 8,
+      narration: room.narration.map(event => ({ ...event })), messages: room.messages.map(message => ({ ...message })), phaseEndsAt: room.phaseEndsAt, serverNow: this.now(), winner: room.winner, minPlayers: 4, maxPlayers: room.settings.maxPlayers,
     };
   }
 }
 
 const globalStore = globalThis as typeof globalThis & { vilaOcultaStore?: GameStore };
+// Refresh methods across route bundles/HMR while retaining existing rooms and sessions.
+if (globalStore.vilaOcultaStore) Object.setPrototypeOf(globalStore.vilaOcultaStore, GameStore.prototype);
 export const gameStore = globalStore.vilaOcultaStore ??= new GameStore();

@@ -1,4 +1,4 @@
-import { AVATAR_IDS, type AvatarId, type RoomAction } from "../game-types";
+import { AVATAR_IDS, ROOM_PACES, type AvatarId, type RoomAction, type RoomPace } from "../game-types";
 import { GameError, gameStore, isGameError, newSessionToken } from "./game-store";
 
 const COOKIE = "vila_oculta_session";
@@ -45,6 +45,14 @@ function onlyKeys(data: Record<string, unknown>, keys: string[]) {
 }
 function actionBody(data: Record<string, unknown>): RoomAction {
   switch (data.type) {
+    case "configure":
+      onlyKeys(data, ["type", "pace", "maxPlayers"]);
+      if (typeof data.pace === "string" && ROOM_PACES.includes(data.pace as RoomPace)
+        && typeof data.maxPlayers === "number" && Number.isInteger(data.maxPlayers)
+        && data.maxPlayers >= 4 && data.maxPlayers <= 8) {
+        return { type: "configure", pace: data.pace as RoomPace, maxPlayers: data.maxPlayers };
+      }
+      break;
     case "ready":
       onlyKeys(data, ["type", "ready"]);
       if (typeof data.ready === "boolean") return { type: "ready", ready: data.ready };

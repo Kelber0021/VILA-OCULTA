@@ -4,11 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import type { AvatarId, Phase, Role, RoomAction, RoomView } from "@/lib/game-types";
 import { Portrait, PortraitPicker } from "./portraits";
+import { Notebook, PhaseRail, RoomSettingsPanel, paceNames, type NotebookValue } from "./room-tools";
 
 const phaseNames: Record<Phase, string> = { lobby: "Reunindo a vila", night: "A vila adormece", discussion: "A vila desperta", voting: "Hora da escolha", results: "O destino da vila", finished: "O último segredo" };
 const roleNames: Record<Role, string> = { citizen: "Cidadão", assassin: "Assassino", sheriff: "Xerife", angel: "Anjo" };
 const roleDescriptions: Record<Role, string> = { citizen: "Observe as versões, discuta as pistas e vote para proteger a vila.", assassin: "Escolha uma pessoa para eliminar a cada noite. Sua identidade deve continuar secreta.", sheriff: "Investigue uma pessoa a cada noite. O resultado chega em segredo ao amanhecer.", angel: "Proteja uma pessoa a cada noite. Você também pode escolher proteger a si mesmo." };
-type RoomTab = "scene" | "chat" | "players" | "history";
+type RoomTab = "scene" | "chat" | "players" | "history" | "notes" | "settings";
 
 function Countdown({ room }: { room: RoomView }) {
   const [elapsed, setElapsed] = useState(0);
@@ -19,7 +20,7 @@ function Countdown({ room }: { room: RoomView }) {
   }, [room.serverNow]);
   if (!room.phaseEndsAt) return null;
   const seconds = Math.max(0, Math.ceil((room.phaseEndsAt - room.serverNow - elapsed) / 1000));
-  return <span className={`countdown ${seconds <= 10 ? "urgent" : ""}`} aria-label={`${seconds} segundos restantes`}><span aria-hidden="true">◷</span> {seconds > 0 ? `00:${String(seconds).padStart(2, "0")}` : "Transição…"}</span>;
+  return <span className={`countdown ${seconds <= 10 ? "urgent" : ""}`} aria-label={`${seconds} segundos restantes`}><span aria-hidden="true">◷</span> {seconds > 0 ? `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}` : "Transição…"}</span>;
 }
 
 function Roster({ room }: { room: RoomView }) {
@@ -34,6 +35,7 @@ export function GameRoom() {
   const [pending, setPending] = useState(false);
   const [tab, setTab] = useState<RoomTab>("scene");
   const [showRole, setShowRole] = useState(false);
+  const [notebook, setNotebook] = useState<{ scope: string; value: NotebookValue } | null>(null);
   const [changePortrait, setChangePortrait] = useState(false);
   const [selection, setSelection] = useState<{ phase: string; target: string } | null>(null);
   const [message, setMessage] = useState("");
@@ -57,7 +59,7 @@ export function GameRoom() {
       const response = await fetch("/api/rooms/current", { cache: "no-store", signal: controller.signal });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Não foi possível atualizar a sala.");
-      if (request === latestRequest.current) { setRoom(data.room); if (data.room?.phase === "lobby") { setShowRole(false); setSelection(null); } setNetworkError(""); setLoading(false); }
+      if (request === latestRequest.current) { setRoom(data.room); if (data.room?.phase === "lobby") { setShowRole(false); setSelection(null); setNotebook(null); } setNetworkError(""); setLoading(false); }
     } catch (cause) {
       if ((!controller.signal.aborted || controller.signal.reason === "timeout") && request === latestRequest.current) { setNetworkError(controller.signal.reason === "timeout" ? "A conexão está demorando mais que o esperado." : cause instanceof Error ? cause.message : "Conexão interrompida."); setLoading(false); }
     } finally {
@@ -68,7 +70,7 @@ export function GameRoom() {
   useEffect(() => {
     const initial = window.setTimeout(() => void refresh(), 0);
     const timer = window.setInterval(() => { if (!document.hidden) void refresh(); }, 2000);
-    const resume = () => { if (!document.hidden) void refresh(); };
+    const resume = () => { if (document.hidden) setShowRole(false); else void refresh(); };
     document.addEventListener("visibilitychange", resume);
     window.addEventListener("online", resume);
     return () => { clearTimeout(initial); clearInterval(timer); controllerRef.current?.abort(); document.removeEventListener("visibilitychange", resume); window.removeEventListener("online", resume); };
@@ -93,8 +95,8 @@ export function GameRoom() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Não foi possível registrar sua ação.");
       setRoom(data.room);
-      if (action.type === "rematch") { setShowRole(false); setSelection(null); setTab("scene"); }
-      if (action.type === "leave") { setConfirmLeave(false); setShowRole(false); }
+      if (action.type === "rematch") { setShowRole(false); setSelection(null); setNotebook(null); setTab("scene"); }
+      if (action.type === "leave") { setConfirmLeave(false); setShowRole(false); setNotebook(null); }
       return true;
     } catch (cause) { setActionError(cause instanceof Error ? cause.message : "A conexão falhou. Tente novamente."); return false; }
     finally { busy.current = false; setPending(false); }
@@ -132,7 +134,7 @@ export function GameRoom() {
   const canStart = room.players.length >= room.minPlayers && readyCount === room.players.length;
   const recentNarration = room.narration.slice(["discussion", "results", "finished"].includes(room.phase) ? -2 : -1);
   const actionTargets = room.players.filter(p => p.alive && (p.id !== self.id || (canNightAct && room.self.role === "angel")));
-  const tabs: { id: RoomTab; label: string }[] = [{ id: "scene", label: "A partida" }, { id: "chat", label: "Conversa" }, { id: "players", label: "Jogadores" }, { id: "history", label: "Histórico" }];
+  const tabs: { id: RoomTab; label: string }[] = [{ id: "scene", label: "A partida" }, { id: "chat", label: "Conversa" }, { id: "players", label: "Jogadores" }, { id: "history", label: "Histórico" }, { id: "notes", label: "Caderno" }, { id: "settings", label: "Opções" }];
 
   return <section className="room-shell">
     <header className="room-top"><div><p className="eyebrow">SUA VILA PARTICULAR</p><div className="room-title"><h1>Sala <span>{room.code}</span></h1><button className="icon-button" onClick={copyCode} aria-label="Copiar código da sala">⧉</button></div></div><div className="room-top-actions"><span className={`connection-status ${networkError ? "offline" : ""}`}><i className="status-dot" />{networkError ? "Reconectando" : "Sala conectada"}</span>{isLobby && <button className="text-button" onClick={copyInvite}>Copiar convite ↗</button>}<button className="text-button" onClick={() => setConfirmLeave(true)}>Sair da sala ↗</button>{!isLobby && <button className="text-button mobile-role-toggle" onClick={() => setShowRole(!showRole)}>{showRole ? "Ocultar meu papel" : "Ver meu papel ◇"}</button>}</div></header>
@@ -145,9 +147,9 @@ export function GameRoom() {
       <div className="room-center panel"><div className="room-tabs" role="tablist" aria-label="Conteúdo da sala">{tabs.map((t, index) => <button role="tab" id={`room-tab-${t.id}`} aria-controls="room-tab-content" aria-selected={tab === t.id} tabIndex={tab === t.id ? 0 : -1} key={t.id} onClick={() => setTab(t.id)} onKeyDown={event => { let next = index; if (event.key === "ArrowRight") next = (index + 1) % tabs.length; else if (event.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length; else if (event.key === "Home") next = 0; else if (event.key === "End") next = tabs.length - 1; else return; event.preventDefault(); setTab(tabs[next].id); document.getElementById(`room-tab-${tabs[next].id}`)?.focus(); }}>{t.label}{t.id === "chat" && room.messages.length > 0 && <small>{room.messages.length}</small>}</button>)}</div>
       <div className={`room-tab-content tab-${tab}`} id="room-tab-content" role="tabpanel" aria-labelledby={`room-tab-${tab}`}>
       {tab === "scene" && <><div className="game-scene"><Image src={room.phase === "discussion" || room.phase === "voting" || room.phase === "finished" ? "/assets/backgrounds/praca-amanhecer.png" : "/assets/backgrounds/vila-noturna.png"} alt="" fill sizes="(max-width: 800px) 100vw, 50vw" /><div className="game-scene-shade" /><div className="scene-phase"><span className="phase-badge">{isLobby ? "PREPARAÇÃO" : room.phase === "finished" ? "FIM DA PARTIDA" : `RODADA ${String(room.round).padStart(2, "0")}`}</span><Countdown key={room.serverNow} room={room} /></div><div className="game-scene-title"><span aria-hidden="true">{isLobby ? "⌂" : room.phase === "night" ? "☾" : "☼"}</span><h2>{phaseNames[room.phase]}</h2></div></div>
-        <div className="narrator-box"><p className="eyebrow"><span className="tiny-star">✦</span> O NARRADOR</p><div className="narration-current" aria-live="polite">{recentNarration.length ? recentNarration.map(event => <p key={event.id}>{event.text}</p>) : <p>A vila aguarda a chegada dos seus moradores.</p>}</div></div>
+        {!isLobby && room.phase !== "finished" && <PhaseRail phase={room.phase} />}<div className="narrator-box"><p className="eyebrow"><span className="tiny-star">✦</span> O NARRADOR</p><div className="narration-current" aria-live="polite">{recentNarration.length ? recentNarration.map(event => <p key={event.id}>{event.text}</p>) : <p>A vila aguarda a chegada dos seus moradores.</p>}</div></div>
         <div className="scene-actions">
-        {isLobby ? <><div className="ready-summary"><span>{readyCount} de {room.players.length} prontos</span><span>{room.players.length < room.minPlayers ? `Faltam ${room.minPlayers - room.players.length} pessoas` : "A vila está reunida"}</span></div><div className="button-row"><button className={`button ${self.ready ? "button-secondary" : "button-primary"}`} disabled={disabled} onClick={() => void act({ type: "ready", ready: !self.ready })}>{self.ready ? "✓ Estou pronto · cancelar" : "Estou pronto"}</button>{self.isHost && <button className="button button-primary" disabled={disabled || !canStart} onClick={() => void act({ type: "start" })}>Iniciar partida ↗</button>}</div><p className="form-note">{self.isHost ? "Quando todos estiverem prontos, você pode iniciar a história." : "O anfitrião inicia quando todos estiverem prontos."}</p></>
+        {isLobby ? <><div className="room-tools-summary"><span>{paceNames[room.settings?.pace ?? "classic"]}</span><span>{room.maxPlayers} lugares</span><button className="text-button" onClick={() => setTab("settings")}>Ver opções ↗</button></div><div className="ready-summary"><span>{readyCount} de {room.players.length} prontos</span><span>{room.players.length < room.minPlayers ? `Faltam ${room.minPlayers - room.players.length} pessoas` : "A vila está reunida"}</span></div><div className="button-row"><button className={`button ${self.ready ? "button-secondary" : "button-primary"}`} disabled={disabled} onClick={() => void act({ type: "ready", ready: !self.ready })}>{self.ready ? "✓ Estou pronto · cancelar" : "Estou pronto"}</button>{self.isHost && <button className="button button-primary" disabled={disabled || !canStart} onClick={() => void act({ type: "start" })}>Iniciar partida ↗</button>}</div><p className="form-note">{self.isHost ? "Quando todos estiverem prontos, você pode iniciar a história." : "O anfitrião inicia quando todos estiverem prontos."}</p></>
         : room.phase === "finished" ? <div className="finished-summary"><h3>{room.winner === "village" ? "A vila venceu." : "O assassino venceu."}</h3><p>Os papéis foram revelados na lista de jogadores. O anfitrião pode reunir a mesma vila para uma nova história.</p><div className="button-row"><button className="button button-secondary" onClick={() => setTab("players")}>Revelar os papéis →</button>{self.isHost && <button className="button button-primary" disabled={disabled} onClick={() => void act({ type: "rematch" })}>{pending ? "Reabrindo a vila…" : "Jogar novamente ↗"}</button>}</div></div>
         : !self.alive ? <div className="waiting-note"><span>◇</span><p><strong>Você acompanha como espectador.</strong>Seu papel fica em segredo até o fim. Aguarde a vila descobrir a verdade.</p></div>
         : canNightAct || canVote ? <><p className="action-prompt">{canVote ? "Em quem a vila deve votar?" : room.self.role === "angel" ? "Quem você vai proteger?" : room.self.role === "sheriff" ? "Quem você vai investigar?" : "Quem será seu alvo?"}</p><div className="target-grid">{actionTargets.map(p => <button disabled={disabled} aria-pressed={target === p.id} className={target === p.id ? "selected" : ""} key={p.id} onClick={() => setSelection({ phase: phaseKey, target: p.id })}><Portrait id={p.avatarId} /><span>{p.name}{p.id === self.id ? " (você)" : ""}</span></button>)}</div><div className="button-row"><button className="button button-primary" disabled={disabled || !target} onClick={() => target && void act(canVote ? { type: "vote", targetId: target } : { type: "night", targetId: target })}>{pending ? "Registrando…" : canVote ? "Confirmar voto" : "Confirmar ação"}</button>{canVote && <button className="button button-secondary" disabled={disabled} onClick={() => void act({ type: "vote", targetId: null })}>Abster-se</button>}</div><p className="form-note">Sua decisão é definitiva nesta fase.</p></>
@@ -155,6 +157,9 @@ export function GameRoom() {
         : <div className="waiting-note"><span>☾</span><p><strong>{room.phase === "night" && room.self.hasActed ? "Sua ação foi registrada." : room.phase === "voting" && self.hasVoted ? "Seu voto foi registrado." : "Aguarde a próxima cena."}</strong>O narrador conduz a passagem do tempo.</p></div>}
         </div></>}
       {tab === "players" && <Roster room={room} />}
+      {tab === "settings" && <RoomSettingsPanel key={`${room.settings?.pace}-${room.maxPlayers}`} room={room} disabled={disabled} act={act} />}
+      {tab === "notes" && isLobby && <div className="notebook-panel"><p className="eyebrow">SEU ESPAÇO PRIVADO</p><h2>As pistas começam à noite.</h2><p className="muted">Seu caderno estará disponível quando a partida começar.</p></div>}
+      {tab === "notes" && !isLobby && <Notebook room={room} value={notebook?.scope === `${room.code}:${room.self.id}` ? notebook.value : { text: "", suspects: [] }} onChange={value => setNotebook({ scope: `${room.code}:${room.self.id}`, value })} />}
       {tab === "history" && <div className="history-panel"><p className="eyebrow">O QUE A VILA JÁ VIVEU</p><h2>Diário da partida</h2><ol className="narration-history">{[...room.narration].reverse().map((n, i) => <li key={n.id}><span>{String(room.narration.length - i).padStart(2, "0")}</span><p>{n.text}</p></li>)}</ol></div>}
       {tab === "chat" && <div className="chat-panel"><div className="panel-heading"><h2>Vozes da vila</h2><span>{canChat ? "Conversa aberta" : "Em silêncio"}</span></div><div className="chat-messages" ref={chatLog} onScroll={event => { const panel = event.currentTarget; followNewMessages.current = panel.scrollHeight - panel.scrollTop - panel.clientHeight < 72; }} role="log" aria-label="Mensagens da sala">{room.messages.length ? room.messages.map(m => <div className={`chat-message ${m.playerId === self.id ? "own" : ""}`} key={m.id}><strong>{m.playerName} {m.playerId === self.id ? "· você" : ""}</strong><p>{m.text}</p></div>) : <div className="chat-empty"><span>“ ”</span><p>Ainda está tudo em silêncio.<br />Comece a conversa com a vila.</p></div>}</div><form className="chat-form" onSubmit={sendMessage}><label className="sr-only" htmlFor="chat-message">Mensagem para a vila</label><input id="chat-message" value={message} onChange={e => setMessage(e.target.value)} placeholder={canChat ? "O que você tem a dizer?" : "A conversa abre na discussão."} maxLength={240} disabled={!canChat || disabled} autoComplete="off" /><button className="button button-primary" type="submit" disabled={!canChat || disabled || !message.trim()} aria-label="Enviar mensagem">↑</button></form><p className="form-note">{canChat ? "Até 240 caracteres. Todos na sala podem ler." : "Silêncio à noite e durante a votação. Espectadores aguardam o fim."}</p></div>}
       </div></div>

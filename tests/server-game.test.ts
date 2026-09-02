@@ -178,3 +178,95 @@ describe("rematch", () => {
     expect(store.action(tokens[0], code, { type: "start" })?.phase).toBe("night");
   });
 });
+
+describe("room settings", () => {
+  it("defaults to classic/8 and requires host ownership and lobby phase", () => {
+    const { store, tokens, code } = setup();
+    expect(store.read(tokens[0], code).settings).toEqual({ pace: "classic", maxPlayers: 8 });
+    expect(() => store.action(tokens[1], code, { type: "configure", pace: "quick", maxPlayers: 4 })).toThrow("Somente o anfitrião");
+    for (const token of tokens) store.action(token, code, { type: "ready", ready: true });
+    store.action(tokens[0], code, { type: "start" });
+    expect(() => store.action(tokens[0], code, { type: "configure", pace: "quick", maxPlayers: 4 })).toThrow("antes da partida");
+  });
+
+  it("resets everyone's consent only on changed settings and enforces capacity on join", () => {
+    const { store, tokens, code } = setup();
+    for (const token of tokens) store.action(token, code, { type: "ready", ready: true });
+    const unchanged = store.action(tokens[0], code, { type: "configure", pace: "classic", maxPlayers: 8 })!;
+    expect(unchanged.players.every(p => p.ready)).toBe(true);
+    const changed = store.action(tokens[0], code, { type: "configure", pace: "quick", maxPlayers: 4 })!;
+    expect(changed.settings).toEqual({ pace: "quick", maxPlayers: 4 });
+    expect(changed.maxPlayers).toBe(4);
+    expect(changed.players.every(p => !p.ready)).toBe(true);
+    expect(() => store.action(tokens[0], code, { type: "start" })).toThrow("prontos");
+    expect(() => store.join(newSessionToken(), { code, name: "Pessoa cinco", avatarId: "ana" })).toThrow("cheia");
+    // Returned settings are snapshots, never a reference that mutates server rules.
+    changed.settings.maxPlayers = 8;
+    expect(store.read(tokens[0], code).settings.maxPlayers).toBe(4);
+  });
+
+  it("rejects invalid pace/capacity and shrinking below current occupancy without changing readiness", () => {
+    const { store, tokens, code } = setup(5);
+    store.action(tokens[0], code, { type: "ready", ready: true });
+    for (const maxPlayers of [3, 9, 4.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => store.action(tokens[0], code, { type: "configure", pace: "quick", maxPlayers })).toThrow("inteiro");
+    }
+    expect(() => store.action(tokens[0], code, { type: "configure", pace: "classic", maxPlayers: 4 })).toThrow("grupo presente");
+    // @ts-expect-error Intentionally invalid runtime input.
+    expect(() => store.action(tokens[0], code, { type: "configure", pace: "__proto__", maxPlayers: 8 })).toThrow("ritmo");
+    expect(store.read(tokens[0], code).settings).toEqual({ pace: "classic", maxPlayers: 8 });
+    expect(store.read(tokens[0], code).players.find(p => p.isHost)?.ready).toBe(true);
+  });
+
+  it.each([
+    ["quick", 25_000, 35_000, 20_000],
+    ["classic", 35_000, 45_000, 30_000],
+    ["relaxed", 60_000, 90_000, 45_000],
+  ] as const)("uses %s deadlines for every phase and always eight seconds of results", (pace, night, discussion, voting) => {
+    const { store, tokens, code, tick } = setup();
+    store.action(tokens[0], code, { type: "configure", pace, maxPlayers: 6 });
+    for (const token of tokens) store.action(token, code, { type: "ready", ready: true });
+    let view = store.action(tokens[0], code, { type: "start" })!;
+    for (const [phase, duration, nextPhase] of [["night", night, "discussion"], ["discussion", discussion, "voting"], ["voting", voting, "results"], ["results", 8_000, "night"]] as const) {
+      expect(view.phase).toBe(phase);
+      expect(view.phaseEndsAt! - view.serverNow).toBe(duration);
+      tick(duration - 1);
+      expect(store.read(tokens[0], code).phase).toBe(phase);
+      tick(1);
+      view = store.read(tokens[0], code);
+      expect(view.phase).toBe(nextPhase);
+    }
+    expect(view.round).toBe(2);
+    expect(view.phaseEndsAt! - view.serverNow).toBe(night);
+  });
+
+  it("preserves custom settings and sessions through a rematch", () => {
+    const { store, tokens, code, tick } = setup();
+    store.action(tokens[0], code, { type: "configure", pace: "quick", maxPlayers: 6 });
+    for (const token of tokens) store.action(token, code, { type: "ready", ready: true });
+    store.action(tokens[0], code, { type: "start" });
+    const people = tokens.map(token => ({ token, ...store.read(token, code).self }));
+    const assassin = people.find(p => p.role === "assassin")!;
+    tick(25_000); store.read(tokens[0], code);
+    tick(35_000); store.read(tokens[0], code);
+    for (const person of people) store.action(person.token, code, { type: "vote", targetId: person.id === assassin.id ? null : assassin.id });
+    const view = store.action(tokens[0], code, { type: "rematch" })!;
+    expect(view).toMatchObject({ phase: "lobby", settings: { pace: "quick", maxPlayers: 6 }, maxPlayers: 6 });
+    expect(tokens.every(token => store.current(token)?.code === code)).toBe(true);
+  });
+
+  it("upgrades a legacy room after module reload without discarding its session", async () => {
+    const first = await import("../lib/server/game-store");
+    const token = newSessionToken();
+    const view = first.gameStore.create(token, { name: "Pessoa legado", avatarId: "ana" });
+    // Emulate a room stored by the version that predates room settings.
+    const storedRooms = Reflect.get(first.gameStore, "rooms") as Map<string, object>;
+    Reflect.deleteProperty(storedRooms.get(view.code)!, "settings");
+    vi.resetModules();
+    const refreshed = await import("../lib/server/game-store");
+    expect(refreshed.gameStore).toBe(first.gameStore);
+    expect(refreshed.gameStore.current(token)?.settings).toEqual({ pace: "classic", maxPlayers: 8 });
+    expect(refreshed.gameStore.action(token, view.code, { type: "configure", pace: "relaxed", maxPlayers: 5 })?.settings).toEqual({ pace: "relaxed", maxPlayers: 5 });
+    refreshed.gameStore.action(token, view.code, { type: "leave" });
+  });
+});

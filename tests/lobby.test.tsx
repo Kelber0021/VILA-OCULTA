@@ -5,7 +5,7 @@ import { GameRoom } from '@/components/game-room';
 import type { RoomView } from '@/lib/game-types';
 
 const fixture = (): RoomView => ({
-  code: 'NEVOA7', phase: 'lobby', round: 0,
+  settings: { pace: 'classic', maxPlayers: 8 }, code: 'NEVOA7', phase: 'lobby', round: 0,
   players: [{ id: 'me', name: 'Marina', avatarId: 'ana', ready: false, alive: true, isHost: true, hasVoted: false }],
   self: { id: 'me', role: null, hasActed: false, voteTargetId: null, investigation: null },
   narration: [{ id: 'event', text: 'Uma nova mesa foi aberta.', at: 1000 }], messages: [],
@@ -50,4 +50,20 @@ describe('sala conectada', () => {
     expect(await screen.findByRole('button', { name: 'Tentar novamente' })).toBeInTheDocument();
     expect(screen.getByText('Conexão interrompida.')).toBeInTheDocument();
   });
+});
+
+test('caderno permanece privado ao trocar de aba e não envia anotações', async () => {
+  const user = userEvent.setup();
+  const room = fixture(); room.phase = 'night'; room.round = 1; room.self.role = 'citizen';
+  room.players.push({ id: 'other', name: 'Bento', avatarId: 'bento', ready: true, alive: true, isHost: false, hasVoted: false });
+  const fetcher = vi.fn(() => response(room)); vi.stubGlobal('fetch', fetcher);
+  render(<GameRoom />);
+  await user.click(await screen.findByRole('tab', { name: 'Caderno' }));
+  await user.type(screen.getByLabelText('Suas pistas e versões'), 'Uma pista privada');
+  await user.click(screen.getByRole('button', { name: /Bento.*Marcar suspeita/ }));
+  await user.click(screen.getByRole('tab', { name: 'A partida' }));
+  await user.click(screen.getByRole('tab', { name: 'Caderno' }));
+  expect(screen.getByLabelText('Suas pistas e versões')).toHaveValue('Uma pista privada');
+  expect(screen.getByRole('button', { name: /Bento.*Suspeito/ })).toHaveAttribute('aria-pressed', 'true');
+  expect(fetcher.mock.calls.every(call => !JSON.stringify(call).includes('Uma pista privada'))).toBe(true);
 });

@@ -34,6 +34,7 @@ export function JoinPageClient() {
     <div className="join-panel"><div className="mode-switch" aria-label="Forma de entrar"><Link aria-current={mode === "join" ? "page" : undefined} href={`/entrar?personagem=${avatarId}${initialCode ? `&sala=${initialCode}` : ""}`}>Entrar em uma sala</Link><Link aria-current={mode === "create" ? "page" : undefined} href={`/entrar?modo=criar&personagem=${avatarId}${initialCode ? `&sala=${initialCode}` : ""}`}>Criar uma sala</Link></div><h2>{mode === "create" ? "Comece uma nova história." : "Seus amigos esperam."}</h2><p className="muted">{mode === "create" ? "Você organiza. O narrador conduz." : "Um nome, um retrato e o código da vila."}</p>
     {activeRoom && <div className="resume-note">Você já está na sala <strong>{activeRoom}</strong>. <Link href="/lobby">Retomar partida →</Link></div>}
     <JoinForm key={initialCode} initialCode={initialCode} onJoin={join} mode={mode} avatarId={avatarId} onAvatarChange={setAvatarId} pending={pending} error={error} />
+    <p className="join-help">Ainda está conhecendo a vila? <Link href="/demonstracao">Experimente a demonstração solo →</Link></p>
     </div>
   </section>;
 }
