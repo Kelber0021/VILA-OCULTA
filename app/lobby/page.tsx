@@ -1,8 +1,4 @@
 import type { Metadata } from "next";
-import { LobbyPreview } from "@/components/lobby-preview";
-
-export const metadata: Metadata = { title: "Lobby demonstrativo" };
-
-export default function LobbyPage() {
-  return <section className="inner-page lobby-page section-shell"><LobbyPreview /></section>;
-}
+import { GameRoom } from "@/components/game-room";
+export const metadata: Metadata = { title: "Sua sala" };
+export default function LobbyPage() { return <GameRoom />; }

@@ -1,53 +1,23 @@
+import Image from "next/image";
 import Link from "next/link";
 
-const acts = [
-  { index: "I", title: "Noite", text: "A cidade adormece. Cada personagem observa ou realiza sua ação em segredo." },
-  { index: "II", title: "Discussão", text: "Ao amanhecer, versões se cruzam. Escute, desconfie e defenda seu ponto de vista." },
-  { index: "III", title: "Votação", text: "A cidade escolhe quem eliminar — ou descobre tarde demais em quem confiou." },
-];
-
 export default function HomePage() {
-  return (
-    <>
-      <section className="hero">
-        <div className="hero-fog" aria-hidden="true" />
-        <div className="hero-content">
-          <p className="eyebrow">Jogo brasileiro de dedução social</p>
-          <h1>Cidade <em>Dorme</em></h1>
-          <p className="hero-line">Quando as janelas se apagam, toda certeza vira suspeita.</p>
-          <p className="hero-description">Receba um personagem, atravesse a noite e descubra em quem confiar antes que a cidade faça sua escolha.</p>
-          <div className="button-row">
-            <Link className="button button-primary" href="/lobby">Criar uma sala</Link>
-            <Link className="button button-secondary" href="/entrar">Entrar em uma sala</Link>
-          </div>
-          <div className="text-links">
-            <Link href="/como-jogar">Como jogar <span aria-hidden="true">→</span></Link>
-            <Link href="/personagens">Personagens <span aria-hidden="true">→</span></Link>
-          </div>
-        </div>
-        <dl className="hero-facts" aria-label="Informações da partida">
-          <div><dt>Jogadores</dt><dd>6–12</dd></div>
-          <div><dt>Duração</dt><dd>20–40 min</dd></div>
-          <div><dt>Onde jogar</dt><dd>No navegador</dd></div>
-        </dl>
-      </section>
-
-      <section className="acts section-shell" aria-labelledby="acts-title">
-        <div className="section-heading">
-          <p className="eyebrow">Uma cidade, três atos</p>
-          <h2 id="acts-title">Toda noite deixa pistas.</h2>
-          <p>O jogo alterna silêncio, conversa e decisão. A verdade depende do que cada pessoa revela — ou esconde.</p>
-        </div>
-        <div className="acts-track">
-          {acts.map((act) => (
-            <article className="act" key={act.title}>
-              <span className="act-index" aria-hidden="true">{act.index}</span>
-              <h3>{act.title}</h3>
-              <p>{act.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </>
-  );
+  return <section className="home-stage">
+    <Image className="scene-background" src="/assets/backgrounds/vila-noturna.png" alt="Uma vila colonial entre montanhas, iluminada por lanternas sob a lua" fill priority sizes="100vw" />
+    <div className="scene-shade" />
+    <div className="hero-copy">
+      <p className="eyebrow"><span className="tiny-star">✦</span> UM JOGO DE DEDUÇÃO SOCIAL</p>
+      <h1>A vila adormece.<br /><em>A desconfiança, não.</em></h1>
+      <p className="hero-description">Entre ruas de pedra e janelas acesas, todos têm um rosto. Alguns têm um segredo.</p>
+      <div className="button-row"><Link className="button button-primary" href="/entrar?modo=criar">Criar uma sala <span aria-hidden="true">↗</span></Link><Link className="button button-secondary" href="/entrar">Entrar em uma sala</Link></div>
+      <div className="hero-details"><span><i className="status-dot" />4–8 amigos</span><span>Um navegador por pessoa</span><span>Narração automática</span></div>
+    </div>
+    <div className="scene-caption"><span className="caption-rule" /><span>SERRA DA NÉVOA<br /><small>Onde ninguém conhece toda a história.</small></span></div>
+    <div className="home-bottom">
+      <div className="home-bottom-intro"><span className="eyebrow">A CADA RODADA</span><p>O silêncio também<br />conta uma história.</p></div>
+      <div className="cycle-item"><span className="cycle-number">01</span><div><h2>A noite</h2><p>Ações secretas. Olhos fechados.</p></div><span className="cycle-icon">☾</span></div>
+      <div className="cycle-item"><span className="cycle-number">02</span><div><h2>A suspeita</h2><p>A vila acorda. As versões mudam.</p></div><span className="cycle-icon">☼</span></div>
+      <div className="cycle-item"><span className="cycle-number">03</span><div><h2>A escolha</h2><p>Um voto pode mudar tudo.</p></div><span className="cycle-icon">◇</span></div>
+    </div>
+  </section>;
 }

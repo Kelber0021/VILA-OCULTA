@@ -1,0 +1,22 @@
+# Salas e sessões ficam em memória: manter somente uma instância.
+# Reinícios, novos deploys e suspensão do plano gratuito apagam as salas.
+services:
+  - type: web
+    name: vila-oculta
+    runtime: node
+    plan: free
+    region: virginia
+    repo: https://github.com/Kelber0021/VILA-OCULTA
+    branch: main
+    autoDeployTrigger: commit
+    numInstances: 1
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: APP_ORIGIN=${APP_ORIGIN:-$RENDER_EXTERNAL_URL} npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: WEB_CONCURRENCY
+        value: "1"

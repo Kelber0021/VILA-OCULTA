@@ -1,38 +1,33 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, test } from "vitest";
-import HomePage from "@/app/page";
-import HowToPlayPage from "@/app/como-jogar/page";
-import CharactersPage from "@/app/personagens/page";
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, test } from 'vitest';
+import HomePage from '@/app/page';
+import HowToPlayPage from '@/app/como-jogar/page';
+import CharactersPage from '@/app/personagens/page';
 
-describe("rotas informativas", () => {
-  test("a tela inicial oferece os dois caminhos principais e explica o ciclo", () => {
+describe('telas da Vila Oculta', () => {
+  test('oferece criar e entrar em salas reais', () => {
     render(<HomePage />);
-
-    expect(screen.getByRole("heading", { level: 1, name: /cidade dorme/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /criar uma sala/i })).toHaveAttribute("href", "/lobby");
-    expect(screen.getByRole("link", { name: /entrar em uma sala/i })).toHaveAttribute("href", "/entrar");
-    expect(screen.getByRole("heading", { name: "Noite" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Discussão" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Votação" })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /criar uma sala/i })).toHaveAttribute('href', '/entrar?modo=criar');
+    expect(screen.getByRole('link', { name: /entrar em uma sala/i })).toHaveAttribute('href', '/entrar');
+    expect(screen.queryByText(/prévia interativa|dados fictícios/i)).not.toBeInTheDocument();
   });
-
-  test("como jogar apresenta as sete etapas na ordem correta", () => {
+  test('regras mostram uma etapa por vez e permitem avançar', async () => {
+    const user = userEvent.setup();
     render(<HowToPlayPage />);
-
-    const steps = screen.getAllByRole("listitem").map((item) => item.textContent);
-    expect(steps).toHaveLength(7);
-    expect(steps[0]).toMatch(/receba seu personagem/i);
-    expect(steps[6]).toMatch(/eliminação ou vitória/i);
+    expect(screen.getAllByRole('tabpanel')).toHaveLength(1);
+    expect(screen.getAllByRole('tab')).toHaveLength(4);
+    await user.click(screen.getByRole('button', { name: /próximo passo/i }));
+    expect(screen.getByRole('tab', { name: /receba seu papel/i })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tabpanel')).toHaveTextContent(/missão, secreta/i);
   });
-
-  test("personagens descreve somente os quatro papéis iniciais", () => {
+  test('a escolha cosmética segue para a entrada sem atribuir papel secreto', async () => {
+    const user = userEvent.setup();
     render(<CharactersPage />);
-
-    const cards = screen.getAllByRole("article");
-    expect(cards).toHaveLength(4);
-    expect(screen.getByRole("heading", { name: "Cidadão" })).toBeInTheDocument();
-    expect(screen.getByText(/observa, discute e vota/i)).toBeInTheDocument();
-    expect(screen.getByText(/é assassino.*não é assassino/i)).toBeInTheDocument();
-    expect(screen.getByText(/protege um jogador durante a noite/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /^Escolher / })).toHaveLength(6);
+    await user.click(screen.getByRole('button', { name: 'Escolher Clara' }));
+    expect(screen.getByRole('button', { name: 'Escolher Clara' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('link', { name: /jogar com este retrato/i })).toHaveAttribute('href', '/entrar?personagem=clara');
+    expect(screen.getByText(/papel secreto será sorteado/i)).toBeInTheDocument();
   });
 });
